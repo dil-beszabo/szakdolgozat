@@ -61,6 +61,7 @@ A legpozitívabb (illetve legnegatívabb) 10%-ba tartozó hetek alkotják az ese
 τ = 0 jelöli a „legpozitívabb” vagy „legnegatívabb” hetet.
 
 A diagramok azt mutatják, hogyan változott a cégekről készült mémek normalizált (z-score) száma az esemény hete körül, a cégek saját átlagukhoz viszonyítva.
+
 ![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/event_pos_num_memes_z.png)
 
 ![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/event_neg_num_memes_z.png)
