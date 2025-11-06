@@ -16,6 +16,13 @@
 
 # <mark style="background: #FFB86CA6;">Getting the distribution</mark>
 ....
+Engagement mutato:
+- score = upvotes − downvotes, így előfordulhatnak 0-nál kisebb értékek.
+
+- A clip(lower=0) nullára vágja a negatívakat, ezzel elkerülöd a log() hibát és a kevés downvote-tól nem torzul a skála.
+
+- np.log1p(x) pontosan log(1 + x), ami stabil kis értékeknél és nem kell előtte float-tá konvertálni.
+
 
 # <mark style="background: #ADCCFFA6;">Fetching NYT data</mark>
 Bar diagram of num_of_memes and num_of_articles per companies
@@ -52,6 +59,22 @@ By incorporating synonyms and alternative spellings for company names, the anal
 
 A mémek számának normalizálása, mint például a z-pontszám (num_memes_z) további segítséget nyújt. Ez azért fontos, mert a különböző cégek mémaktivitása eltérő lehet (pl. egy kis cég 10 mémje nagy, egy nagy cégnek pedig kevés). A normalizálás lehetővé teszi, hogy a mémaktivitás csúcsait és mélypontjait objektíven hasonlítsuk össze a cégek között, és jobban azonosítsuk az igazi "tüskéket" (spike-okat).
 - Z-score (num_memes_z): Azt mutatja meg, hogy egy adott heti mémaktivitás mennyire tér el egy cég saját történelmi átlagától, standard deviációban kifejezve. Ez segít összehasonlítani a kiemelkedés nagyságát különböző cégek között, függetlenül attól, hogy melyiknek van alapvetően magasabb mémaktivitása.
+
+# Meme sentiment
+1. Zero-shot CLIP on the raw image
+	- _clip_sentiment(path)
+	- Prompts passed to CLIP: ["a negative meme", "a positive meme"]
+	- We feed image + those two texts through CLIP.
+	- CLIP returns a 1×2 similarity vector (logits_per_image).
+	- Soft-max → probabilities →pos_c = probs[1], neg_c = probs[0].
+	- Sentiment component from image alone: pos_c – neg_c.
+2. EasyOCR → FinBERT on extracted text
+	- _ocr_finbert_sentiment(path)
+	- EasyOCR reads all English text from the image.
+	- The concatenated OCR string is sent through FinBERT (pipeline('text-classification',…, top_k=None)).
+	- FinBERT yields three scores; we keep pos_t = out["Positive"], neg_t = out["Negative"].
+	- Text-based sentiment component: pos_t – neg_t.
+
 
 # <mark style="background: #FF5582A6;">Results</mark>
 
