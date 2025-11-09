@@ -2,30 +2,30 @@
 ## Mi van meg eddig?
 - A `build_panel.ipynb` és a belőle származó heti panel (pl. `company_weekly_panel_normalized.csv`) már tartalmazza a NYT-hírek heti darabszámát (num_articles), sentiment-átlagait (sentiment_score, mean_pos, mean_neg) és a mémek darabszámát (num_memes).
 - A `lead_lag_analysis.ipynb`/`.py`-ben küldtél cross-korrelációs és event-study ábrákat, amelyek megmutatták, hogy a hírek pozitív/negatív tartalma hol vezet, hol követi a mém aktivitást.
-- Az `enriched_predictions_metadata.csv`-ben szerepel posztszintű engagement (score → `engagement`), valamint `num_comments` és `total_awards_received`,ezeket sem vontad még be a panelbe.
+- ~~Az `enriched_predictions_metadata.csv`-ben szerepel posztszintű engagement (score → `engagement`), valamint `num_comments` és `total_awards_received`,ezeket sem vontad még be a panelbe.~~
   
 ## Mi hiányzik még a mostani adatbázisból?
 
 A "panel" kifejezés azt jelenti, hogy több különböző brand adatait figyeljük meg, több héten keresztül. Ez a fajta adatstruktúra lehetővé teszi, hogy megvizsgáljuk, hogyan változnak a dolgok az idő múlásával az egyes brandeknél.
-- **Meme_sentiment** – Jelenleg csak a NYT-cikkek hangulata (sentiment) szerepel az adatbázisban, de a mémek hangulata még hiányzik.
-- **Meme_engagement** – A mémekhez kapcsolódó felhasználói aktivitás (pl. like-ok, megosztások) heti szinten még nincs összesítve.
-- **NYT_mention_{b,t}** – A NYT-cikkek heti darabszáma jelenleg `num_articles` néven szerepel, de a professzor átnevezné `NYT_mention_{b,t}`-re, ahol `b` a brandet és `t` az adott hetet jelöli.
+- ~~**Meme_sentiment** – Jelenleg csak a NYT-cikkek hangulata (sentiment) szerepel az adatbázisban, de a mémek hangulata még hiányzik.~~
+- ~~**Meme_engagement** – A mémekhez kapcsolódó felhasználói aktivitás (pl. like-ok, megosztások) heti szinten még nincs összesítve.~~
+- ~~**NYT_mention_{b,t}** – A NYT-cikkek heti darabszáma jelenleg `num_articles` néven szerepel, de a professzor átnevezné `NYT_mention_{b,t}`-re, ahol `b` a brandet és `t` az adott hetet jelöli.~~
 - **Kontroll változók és fixhatások** – Ezek további tényezők, amik befolyásolhatják a mém aktivitást, de nem a fő célunk vizsgálni őket. Fontos őket figyelembe venni, hogy pontosabb képet kapjunk a hírek és mémek közötti kapcsolatról.
 **
 ## 1. Új adatok, amiket létre kell hozni (brand b, hét t)
 Ezek az új adatok segítenek jobban megérteni a mémek és a hírek közötti kapcsolatot:
-- **Meme_volume_{b,t}**: Adott brand `b` adott héten `t` közzétett mém-posztjainak száma.
-- **Meme_sentiment_{b,t}**: Adott brand `b` mém-posztjainak átlagos hangulata (sentiment) az adott héten `t`.
-- **Meme_engagement_{b,t}**: Adott brand `b` mém-posztjainak átlagos felhasználói aktivitása (engagement, pl. upvotes összeg, amit esetleg érdemes logaritmikus skálán nézni: log(1+upvotes)) az adott héten `t`.
-- **NYT_mention_{b,t}**: Adott brand `b` NYT-cikkeinek száma az adott héten `t`.
-- **NYT_sentiment_{b,t}**: Adott brand `b` NYT-cikkeinek átlagos hangulata (sentiment) az adott héten `t`.
+~~- **Meme_volume_{b,t}**: Adott brand `b` adott héten `t` közzétett mém-posztjainak száma.~~
+~~- **Meme_sentiment_{b,t}**: Adott brand `b` mém-posztjainak átlagos hangulata (sentiment) az adott héten `t`.~~
+~~- **Meme_engagement_{b,t}**: Adott brand `b` mém-posztjainak átlagos felhasználói aktivitása (engagement, pl. upvotes összeg, amit esetleg érdemes logaritmikus skálán nézni: log(1+upvotes)) az adott héten `t`.~~
+~~- **NYT_mention_{b,t}**: Adott brand `b` NYT-cikkeinek száma az adott héten `t`.~~
+~~- **NYT_sentiment_{b,t}**: Adott brand `b` NYT-cikkeinek átlagos hangulata (sentiment) az adott héten `t`.~~
 - **További jellemzők**: Gondolkodjunk el, hogy van-e más, hasznos jellemző, például a mémek témakategóriája.
 **
 ## 2. Időegység
-**Heti aggregálás (t = év×hét)**: Az összes adatot heti szintre kell összesíteni, azaz minden egyes brand minden egyes hetére egyetlen értéket kapunk a fenti változókból.
+~~**Heti aggregálás (t = év×hét)**: Az összes adatot heti szintre kell összesíteni, azaz minden egyes brand minden egyes hetére egyetlen értéket kapunk a fenti változókból.~~
 
 ## 3. Lagolt változók
-**Lagolt magyarázók**: Ezek a változók az előző hetek (t-1, t-2, stb.) értékeit jelentik. Például, ha a NYT_mention_{b,t-1}-et nézzük, az azt jelenti, hogy az előző heti NYT említések számát vizsgáljuk. Ezek segítenek abban, hogy lássuk, a múltbeli események hogyan befolyásolják a jelenlegi mém aktivitást. Már van egy `make_lags` függvényed, amit ehhez használhatsz.
+~~**Lagolt magyarázók**: Ezek a változók az előző hetek (t-1, t-2, stb.) értékeit jelentik. Például, ha a NYT_mention_{b,t-1}-et nézzük, az azt jelenti, hogy az előző heti NYT említések számát vizsgáljuk. Ezek segítenek abban, hogy lássuk, a múltbeli események hogyan befolyásolják a jelenlegi mém aktivitást. Már van egy `make_lags` függvényed, amit ehhez használhatsz.~~
 
 ## 4. Kontroll változók és Fixhatások
 Ezek olyan statisztikai módszerek, amelyekkel kizárhatjuk a zavaró tényezők hatását, így jobban láthatjuk a hírek és mémek közötti valódi kapcsolatot.
