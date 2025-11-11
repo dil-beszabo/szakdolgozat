@@ -30,6 +30,7 @@ DERIVED_DIR = os.path.join(REPO_ROOT, "data", "derived")
 NYT_OUT = os.path.join(DERIVED_DIR, "nyt_weekly_sentiment.csv")
 MEMES_OUT = os.path.join(DERIVED_DIR, "memes_weekly_activity.csv")
 PANEL_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_enriched.csv")
+ANALYSIS_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_analysis_ready.csv")
 
 # Minimum publication date to include NYT articles in aggregates
 # Adjust as needed (e.g., pd.Timestamp("2020-01-01"))
@@ -52,7 +53,12 @@ def _process_nyt_file_for_sentiment(filepath: str) -> List[Dict[str, float]]:
     # and ensure each process has its own model instance.
     clf = get_finbert()
 
-    company_key = _simple_key(os.path.basename(filepath).split('-')[0].split('.')[0])
+    # Parse brand key from filename:
+    # - keep hyphens inside brand names (e.g., "coca-cola")
+    # - drop trailing "-<digits>" suffixes only (e.g., "google-1" -> "google")
+    base = os.path.splitext(os.path.basename(filepath))[0]
+    base = re.sub(r"-\d+$", "", base)
+    company_key = _simple_key(base)
     company_article_probs = []
 
     with open(filepath, "r", encoding="utf-8") as f:
@@ -256,7 +262,8 @@ def _meme_sentiment(row) -> float:
 
 def build_memes_weekly(pred_dir: str) -> pd.DataFrame:
     # Prefer predictions_metadata.csv; fallback to predictions_manifest.csv
-    meta_path = os.path.join(pred_dir, "predictions_metadata.csv")
+    enriched_meta_path = os.path.join(pred_dir, "enriched_predictions_metadata.csv")
+    meta_path = enriched_meta_path if os.path.exists(enriched_meta_path) else os.path.join(pred_dir, "predictions_metadata.csv")
     mani_path = os.path.join(pred_dir, "predictions_manifest.csv")
     csv_path = meta_path if os.path.exists(meta_path) else mani_path
     df = pd.read_csv(csv_path)
@@ -286,7 +293,16 @@ def build_memes_weekly(pred_dir: str) -> pd.DataFrame:
     df["week_start"] = (df["date"] - pd.to_timedelta(df["date"].dt.dayofweek, unit="D"))
 
     # Aggregate weekly counts (and optional score if exists)
-    agg = df.groupby(["company", "week_start"], as_index=False).agg(
+    # Try to pick an engagement-like column if present
+    engagement_col = next((c for c in ["engagement", "score", "upvotes"] if c in df.columns), None)
+    if engagement_col:
+        agg = df.groupby(["company", "week_start"], as_index=False).agg(
+            num_memes=("date", "count"),
+            mean_meme_sentiment=("meme_sentiment", "mean"),
+            meme_engagement=(engagement_col, "mean"),
+        )
+    else:
+        agg = df.groupby(["company", "week_start"], as_index=False).agg(
         num_memes=("date", "count"),
         mean_meme_sentiment=("meme_sentiment", "mean"),
     )
@@ -329,18 +345,79 @@ def build_and_save_all():
         print(memes_weekly.head().to_string(index=False))
 
     print("\nJoining into weekly panel and creating lags...")
-    panel = pd.merge(nyt_weekly, memes_weekly, on=["company", "week_start"], how="inner")
-    lag_cols = ["sentiment_score", "mean_pos", "mean_neg", "non_neutral_share", "NYT_mention"]
-    panel = make_lags(panel, by="company", date_col="week_start", cols=lag_cols, max_lag=4)
-    
-    # Add normalizations
-    print("\nAdding meme normalizations (if any)..")
-    panel = add_normalizations(panel)
+    panel = pd.merge(nyt_weekly, memes_weekly, on=["company", "week_start"], how="outer")
+    # counts → 0; means stay NaN if no memes
+    for c in ["NYT_mention", "num_memes"]:
+        if c in panel.columns:
+            panel[c] = panel[c].fillna(0).astype(int)
 
+    # Save the raw merged/enriched panel for reference (backwards compatibility)
     panel.to_csv(PANEL_OUT, index=False)
-    print("Saved:", PANEL_OUT)
-    print(panel.head().to_string(index=False))
-    print("\nDone. Run lead_lag_analysis.py to compute correlations and event studies.")
+    print("Saved (enriched merge):", PANEL_OUT)
+
+    # Balance to full brand-week grid for analysis-ready output
+    companies = sorted(panel["company"].dropna().unique().tolist())
+    wk_min = panel["week_start"].min()
+    wk_max = panel["week_start"].max()
+    weeks = pd.date_range(wk_min, wk_max, freq="W-MON")
+    grid = pd.MultiIndex.from_product([companies, weeks], names=["company", "week_start"])
+    panel2 = (
+        panel.set_index(["company", "week_start"])
+        .reindex(grid)
+        .reset_index()
+    )
+
+    # Re-apply fill rules after balancing
+    for c in ["NYT_mention", "num_memes"]:
+        if c in panel2.columns:
+            panel2[c] = panel2[c].fillna(0).astype(int)
+
+    # Log transforms and ISO helpers
+    if "num_memes" in panel2.columns:
+        panel2["log1p_meme_volume"] = np.log1p(panel2["num_memes"])
+    if "meme_engagement" in panel2.columns:
+        panel2["log1p_meme_engagement"] = np.log1p(panel2["meme_engagement"].fillna(0))
+    iso = panel2["week_start"].dt.isocalendar()
+    panel2["iso_year"] = iso.year.astype(int)
+    panel2["iso_week"] = iso.week.astype(int)
+
+    # Create lags for NYT and meme-side variables
+    lag_cols = ["sentiment_score", "mean_pos", "mean_neg", "non_neutral_share", "NYT_mention",
+                "num_memes", "mean_meme_sentiment", "meme_engagement"]
+    lag_cols = [c for c in lag_cols if c in panel2.columns]
+    panel2 = make_lags(panel2, by="company", date_col="week_start", cols=lag_cols, max_lag=4)
+
+    # Add z/relative normalizations on the balanced panel
+    print("\nAdding meme normalizations (if any) on balanced panel..")
+    panel2 = add_normalizations(panel2)
+
+    # Rename NYT fields for clarity
+    panel2 = panel2.rename(columns={
+        "sentiment_score": "nyt_sentiment",
+        "mean_pos": "nyt_pos_share",
+        "mean_neg": "nyt_neg_share",
+        "mean_neu": "nyt_neu_share",
+        "non_neutral_share": "nyt_non_neutral_share",
+    })
+    # Rename lag columns accordingly
+    lag_rename_map = {}
+    for k in range(1, 5):
+        for old, new in [
+            (f"sentiment_score_L{k}", f"nyt_sentiment_L{k}"),
+            (f"mean_pos_L{k}", f"nyt_pos_share_L{k}"),
+            (f"mean_neg_L{k}", f"nyt_neg_share_L{k}"),
+            (f"non_neutral_share_L{k}", f"nyt_non_neutral_share_L{k}"),
+        ]:
+            if old in panel2.columns:
+                lag_rename_map[old] = new
+    if lag_rename_map:
+        panel2 = panel2.rename(columns=lag_rename_map)
+
+    # Save analysis-ready panel
+    panel2.to_csv(ANALYSIS_OUT, index=False)
+    print("Saved (analysis-ready):", ANALYSIS_OUT)
+    print(panel2.head().to_string(index=False))
+    print("\nDone. You can now run TWFE estimation on the analysis-ready panel.")
 
 
 if __name__ == "__main__":

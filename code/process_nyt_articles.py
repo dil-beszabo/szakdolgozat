@@ -1,6 +1,5 @@
 import os
 from collections import defaultdict # This import is no longer used
-from clean_text import clean_text
 from transformers import pipeline
 import re as re
 import numpy as np
