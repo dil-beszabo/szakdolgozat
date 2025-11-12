@@ -1,9 +1,16 @@
+"""Build weekly, brand-level panel data by merging NYT article sentiment and meme activity.
+
+This module:
+- parses NYT article text files, scores per-article sentiment, aggregates to weekly per-brand
+- scores meme images with CLIP + OCR→FinBERT, aggregates to weekly per-brand
+- joins the two sides, balances the panel to brand-week grid, adds transforms and lags
+"""
 import os
 import re
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 import multiprocessing
 
-# ------ Imports for image+OCR sentiment ------ #
+# --------------- Third-party deps ---------------- #
 import torch
 import torch.nn.functional as F
 from PIL import Image, UnidentifiedImageError
@@ -14,14 +21,18 @@ import easyocr
 import numpy as np
 import pandas as pd
 
-from process_nyt_articles import _simple_key, iter_nyt_articles, get_finbert, score_article_company_fair, META_HEADERS, SEP_LINE, preprocess_article_text, split_articles
+# --------------- Local imports ------------------- #
+from process_nyt_articles import (
+    _simple_key,
+    get_finbert,
+    score_article_company_fair,
+    META_HEADERS,
+    preprocess_article_text,
+    split_articles,
+)
 from lead_lag_normalized import add_normalizations
 
-# This script processes New York Times articles and meme activity data to build a weekly panel dataset.
-# It is designed to be run as a standalone script to generate derived CSV files.
-#
 # -------------------------- Config -------------------------- #
-# Ensure these paths are correctly configured before running the script.
 REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
 NYT_DIR = os.path.join(REPO_ROOT, "data", "nyt")
 PRED_IMG_DIR = os.path.join(REPO_ROOT, "data", "prediction_images")
@@ -33,7 +44,6 @@ PANEL_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_enriched.csv")
 ANALYSIS_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_analysis_ready.csv")
 
 # Minimum publication date to include NYT articles in aggregates
-# Adjust as needed (e.g., pd.Timestamp("2020-01-01"))
 NYT_MIN_DATE = pd.Timestamp("2023-01-01")
 
 # Per-image sentiment cache
@@ -44,18 +54,74 @@ os.makedirs(DERIVED_DIR, exist_ok=True)
 
 # ------------------- NYT parsing and scoring ---------------- #
 
+_NYT_WEEKLY_EMPTY_COLUMNS = [
+    "company",
+    "week_start",
+    "mean_pos",
+    "mean_neu",
+    "mean_neg",
+    "NYT_mention",
+    "sentiment_score",
+    "non_neutral_share",
+]
+
+
+def _empty_nyt_weekly_df() -> pd.DataFrame:
+    return pd.DataFrame(columns=list(_NYT_WEEKLY_EMPTY_COLUMNS))
+
+
+def _parse_pub_date(lines: List[str]) -> Optional[pd.Timestamp]:
+    """Parse publication date from 'Publication date:' line with a few known formats."""
+    date_line = next((l for l in lines if l.startswith("Publication date:")), None)
+    if not date_line:
+        return None
+    date_str = date_line.replace("Publication date:", "").strip()
+    for fmt in (None, "%Y-%m-%d", "%b %d, %Y", "%B %d, %Y", "%d %b %Y", "%d %B %Y"):
+        try:
+            if fmt is None:
+                return pd.to_datetime(date_str, errors="raise")
+            return pd.to_datetime(pd.to_datetime(date_str, format=fmt).date())
+        except Exception:
+            continue
+    return None
+
+
+def _extract_title_and_body(lines: List[str]) -> Tuple[str, str]:
+    """Extract article title and body from a split block."""
+    title_line = next((l for l in lines if l.startswith("Title:")), None)
+    title = title_line.replace("Title:", "").strip() if title_line else (lines[0] if lines else "")
+
+    ft_idx = next((i for i, l in enumerate(lines) if l.startswith("Full text:")), None)
+    body = ""
+    if ft_idx is not None:
+        text_lines: List[str] = []
+        for l in lines[ft_idx:]:
+            if any(l.startswith(h) for h in META_HEADERS) and not l.startswith("Full text:"):
+                break
+            if l.startswith("Full text:"):
+                l = l[len("Full text:"):].strip()
+            text_lines.append(l)
+        body = " ".join(text_lines).strip()
+    return title, body
+
+
+def _score_text_for_company(text: str, company_key: str) -> Dict[str, float]:
+    """Preprocess and score text with company-aware FinBERT routing."""
+    pre = preprocess_article_text(text)
+    probs = score_article_company_fair(pre, company_key)
+    return {
+        "pos": probs.get("Positive", 0.0),
+        "neu": probs.get("Neutral", 0.0),
+        "neg": probs.get("Negative", 0.0),
+    }
+
+
 def _process_nyt_file_for_sentiment(filepath: str) -> List[Dict[str, float]]:
-    """
-    Worker function to process a single NYT file and return sentiment probabilities.
-    Initializes FinBERT locally within the worker process.
-    """
-    # FinBERT should be initialized in each worker process to avoid serialization issues
-    # and ensure each process has its own model instance.
+    """Worker: parse a single NYT file into per-article sentiment rows for that company."""
+    # Init FinBERT per worker process
     clf = get_finbert()
 
-    # Parse brand key from filename:
-    # - keep hyphens inside brand names (e.g., "coca-cola")
-    # - drop trailing "-<digits>" suffixes only (e.g., "google-1" -> "google")
+    # Brand key from filename; keep inner hyphens, drop trailing -<digits>
     base = os.path.splitext(os.path.basename(filepath))[0]
     base = re.sub(r"-\d+$", "", base)
     company_key = _simple_key(base)
@@ -65,83 +131,48 @@ def _process_nyt_file_for_sentiment(filepath: str) -> List[Dict[str, float]]:
         raw = f.read()
     
     for block in split_articles(raw):
-        # Extract title and fulltext within this worker to avoid passing large strings
         lines = [l.strip() for l in block.splitlines() if l.strip()]
-        title_line = next((l for l in lines if l.startswith("Title:")), None)
-        title = title_line.replace("Title:", "").strip() if title_line else (lines[0] if lines else "")
-
-        ft_idx = next((i for i, l in enumerate(lines) if l.startswith("Full text:")), None)
-        body = ""
-        if ft_idx is not None:
-            text_lines = []
-            for l in lines[ft_idx:]:
-                if any(l.startswith(h) for h in META_HEADERS) and not l.startswith("Full text:"):
-                    break
-                if l.startswith("Full text:"):
-                    l = l[len("Full text:"):].strip()
-                text_lines.append(l)
-            body = " ".join(text_lines).strip()
-        
-        # Use extract_title_body_date logic here
-        date_line = next((l for l in lines if l.startswith("Publication date:")), None)
-        pub_date = None
-        if date_line:
-            date_str = date_line.replace("Publication date:", "").strip()
-            for fmt in (None, "%Y-%m-%d", "%b %d, %Y", "%B %d, %Y", "%d %b %Y", "%d %B %Y"):
-                try:
-                    if fmt is None:
-                        pub_date = pd.to_datetime(date_str, errors="raise")
-                    else:
-                        pub_date = pd.to_datetime(pd.to_datetime(date_str, format=fmt).date())
-                    break
-                except Exception:
-                    continue
+        title, body = _extract_title_and_body(lines)
+        pub_date = _parse_pub_date(lines)
         text = f"{title} {body}".strip()
         if not text or pub_date is None:
             continue
 
-        # Now score this individual article using score_article_company_fair
-        pre = preprocess_article_text(text)
-        probs = score_article_company_fair(pre, company_key) # score_article_company_fair no longer takes clf arg
+        probs = _score_text_for_company(text, company_key)
         company_article_probs.append({
             "company": company_key,
             "date": pd.to_datetime(pub_date).normalize(),
-            "pos": probs.get("Positive", 0.0),
-            "neu": probs.get("Neutral", 0.0),
-            "neg": probs.get("Negative", 0.0),
+            "pos": probs["pos"],
+            "neu": probs["neu"],
+            "neg": probs["neg"],
         })
 
     return company_article_probs
 
 
 def build_nyt_weekly(nyt_dir: str, num_processes: int = None) -> pd.DataFrame:
-    rows = []
-    # Get all NYT text files
-    nyt_files = [os.path.join(nyt_dir, f) for f in os.listdir(nyt_dir) if f.endswith('.txt')]
+    """Parallel-parse NYT files and aggregate to weekly per company."""
+    nyt_files = sorted(
+        os.path.join(nyt_dir, f) for f in os.listdir(nyt_dir) if f.endswith(".txt")
+    )
     
-    # Determine number of processes, default to CPU count
     if num_processes is None:
         num_processes = os.cpu_count() or 1
     print(f"Processing {len(nyt_files)} NYT files in parallel using {num_processes} processes...")
 
-    # Use a multiprocessing Pool to process files in parallel
     with multiprocessing.Pool(processes=num_processes) as pool:
-        # Map the worker function to each file. `itertools.repeat` is used to pass fixed args.
-        # The result is a list of lists of sentiment probabilities.
         results_lists = pool.map(_process_nyt_file_for_sentiment, nyt_files)
     
-    # Flatten the list of lists into a single list of rows
-    for result_list in results_lists:
-        rows.extend(result_list)
+    rows = [row for lst in results_lists for row in lst]
 
     if not rows:
-        return pd.DataFrame(columns=["company", "week_start", "mean_pos", "mean_neu", "mean_neg", "NYT_mention", "sentiment_score", "non_neutral_share"])    
+        return _empty_nyt_weekly_df()
     df = pd.DataFrame(rows)
-    # Filter to articles on/after NYT_MIN_DATE
+
     df = df[df["date"] >= NYT_MIN_DATE]
     if df.empty:
-        return pd.DataFrame(columns=["company", "week_start", "mean_pos", "mean_neu", "mean_neg", "NYT_mention", "sentiment_score", "non_neutral_share"])    
-    # Week start Monday
+        return _empty_nyt_weekly_df()
+
     df["week_start"] = (df["date"] - pd.to_timedelta(df["date"].dt.dayofweek, unit="D"))
     grp = df.groupby(["company", "week_start"], as_index=False).agg(
         mean_pos=("pos", "mean"),
@@ -157,9 +188,9 @@ def build_nyt_weekly(nyt_dir: str, num_processes: int = None) -> pd.DataFrame:
 
 def _find_timestamp_column(df: pd.DataFrame) -> str:
     candidates = ["created_utc", "created_at", "created", "timestamp", "date"]
-    for c in candidates:
-        if c in df.columns:
-            return c
+    col = next((c for c in candidates if c in df.columns), None)
+    if col:
+        return col
     raise ValueError("No timestamp column found in predictions CSV.")
 
 
@@ -255,9 +286,7 @@ def _meme_sentiment(row) -> float:
     path = os.path.join(PRED_IMG_DIR, row["saved_path"]) if "saved_path" in row else row.get("path", "")
     pos_c, neg_c = _clip_sentiment(path)
     pos_t, neg_t = _ocr_finbert_sentiment(path)
-    # average scores
-    score = ((pos_c - neg_c) + (pos_t - neg_t)) / 2.0
-    return score
+    return ((pos_c - neg_c) + (pos_t - neg_t)) / 2.0
 
 
 def build_memes_weekly(pred_dir: str) -> pd.DataFrame:
@@ -303,13 +332,11 @@ def build_memes_weekly(pred_dir: str) -> pd.DataFrame:
         )
     else:
         agg = df.groupby(["company", "week_start"], as_index=False).agg(
-        num_memes=("date", "count"),
-        mean_meme_sentiment=("meme_sentiment", "mean"),
-    )
+            num_memes=("date", "count"),
+            mean_meme_sentiment=("meme_sentiment", "mean"),
+        )
     # Spike rule: weekly num_memes > mean + 2*std within company
     def _spike_flag(s: pd.Series) -> pd.Series:
-        # mu, sd = s.mean(), s.std(ddof=0)
-        # return (s > (mu + 2.0 * sd)).astype(int)
         thresh = s.quantile(0.90)  
         return (s > thresh).astype(int)
     agg["meme_spike"] = agg.groupby("company")["num_memes"].transform(_spike_flag)
@@ -325,24 +352,22 @@ def make_lags(panel: pd.DataFrame, by: str, date_col: str, cols: List[str], max_
     return panel
 
 
-def build_and_save_all():
-    # Orchestrates the building and saving of NYT sentiment, meme activity, and the combined weekly panel.
-    print("Building NYT weekly sentiment (first run, this can be slow)...")
+if __name__ == "__main__":
+    # Orchestrate the build and save of NYT sentiment, meme activity, and the combined panel.
+
+    print("Building NYT weekly sentiment...")
     nyt_weekly = build_nyt_weekly(NYT_DIR, num_processes=multiprocessing.cpu_count())
     nyt_weekly.to_csv(NYT_OUT, index=False)
     print("Saved:", NYT_OUT)
     print(nyt_weekly.head().to_string(index=False))
 
     print("\nBuilding memes weekly activity...")
-    if os.path.exists(MEMES_OUT):
-        print(f"Memes weekly activity exists -> loading {MEMES_OUT}")
-        memes_weekly = pd.read_csv(MEMES_OUT, parse_dates=["week_start"])
-    else:
-        print("Building memes weekly activity (first run, this can be slow)...")
-        memes_weekly = build_memes_weekly(PRED_IMG_DIR)
-        memes_weekly.to_csv(MEMES_OUT, index=False)
-        print("Saved:", MEMES_OUT)
-        print(memes_weekly.head().to_string(index=False))
+  
+    print("Building memes weekly activity (first run, this can be slow)...")
+    memes_weekly = build_memes_weekly(PRED_IMG_DIR)
+    memes_weekly.to_csv(MEMES_OUT, index=False)
+    print("Saved:", MEMES_OUT)
+    print(memes_weekly.head().to_string(index=False))
 
     print("\nJoining into weekly panel and creating lags...")
     panel = pd.merge(nyt_weekly, memes_weekly, on=["company", "week_start"], how="outer")
@@ -420,5 +445,3 @@ def build_and_save_all():
     print("\nDone. You can now run TWFE estimation on the analysis-ready panel.")
 
 
-if __name__ == "__main__":
-    build_and_save_all()

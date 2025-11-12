@@ -9,6 +9,7 @@ import pandas as pd
 
 ROOT = Path("/Users/beszabo/bene/szakdolgozat")
 DERIVED = ROOT / "data" / "derived"
+SPARSITY = DERIVED / "sparsity"
 PANEL_CSV = DERIVED / "company_weekly_panel_analysis_ready.csv"
 
 
@@ -153,39 +154,43 @@ def main():
     # Per-brand coverage
     per_brand = per_brand_coverage(df)
 
-    # Sentiment run-lengths (consecutive weeks with sentiment available)
-    runs = sentiment_run_lengths(df, min_run=1)
-
     # Missing reason breakdown for strict spec (current+L1..L4)
     var_missing_df, combo_missing_df = missing_reason_breakdown(df)
 
-    # Per-brand mention rate (how often NYT_mention > 0)
-    mention_rate = (
-        df.assign(has_mention=(df["NYT_mention"].fillna(0) > 0))
-        .groupby("company")["has_mention"]
-        .mean()
-        .rename("mention_week_share")
-        .reset_index()
-        .sort_values("mention_week_share", ascending=False)
+    # Aggregate NYT article counts
+    df["NYT_mention"] = df["NYT_mention"].fillna(0).astype(int)
+    yearly = (
+        df.assign(year=df["week_start"].dt.year)
+        .groupby("year", as_index=False)["NYT_mention"]
+        .sum()
+        .rename(columns={"NYT_mention": "articles"})
+        .sort_values("year")
+    )
+    by_brand_all_years = (
+        df.groupby("company", as_index=False)["NYT_mention"]
+        .sum()
+        .rename(columns={"NYT_mention": "articles_total"})
+        .sort_values("articles_total", ascending=False)
     )
 
     # Save reports
-    DERIVED.mkdir(parents=True, exist_ok=True)
-    overview.to_csv(DERIVED / "sparsity_overview.csv", index=False)
-    per_brand.to_csv(DERIVED / "sparsity_per_brand.csv", index=False)
-    runs.to_csv(DERIVED / "sparsity_sentiment_run_lengths.csv", index=False)
-    var_missing_df.to_csv(DERIVED / "sparsity_missing_variables.csv", index=False)
-    combo_missing_df.to_csv(DERIVED / "sparsity_missing_combinations_top.csv", index=False)
-    mention_rate.to_csv(DERIVED / "nyt_mention_week_share_by_brand.csv", index=False)
+    SPARSITY.mkdir(parents=True, exist_ok=True)
+    # Keep filenames consistent with the existing sparsity folder
+    overview.to_csv(SPARSITY / "sparsity_overview_sentiment+mention.csv", index=False)
+    per_brand.to_csv(SPARSITY / "sparsity_per_brand.csv", index=False)
+    var_missing_df.to_csv(SPARSITY / "sparsity_missing_variables.csv", index=False)
+    combo_missing_df.to_csv(SPARSITY / "sparsity_missing_combinations_top.csv", index=False)
+    yearly.to_csv(SPARSITY / "nyt_articles_by_year.csv", index=False)
+    by_brand_all_years.to_csv(SPARSITY / "nyt_articles_by_brand_all_years.csv", index=False)
 
     # Console highlights
     print("\nSaved:")
-    print(" - sparsity_overview.csv")
-    print(" - sparsity_per_brand.csv")
-    print(" - sparsity_sentiment_run_lengths.csv")
-    print(" - sparsity_missing_variables.csv")
-    print(" - sparsity_missing_combinations_top.csv")
-    print(" - nyt_mention_week_share_by_brand.csv")
+    print(" - sparsity/sparsity_overview_sentiment+mention.csv")
+    print(" - sparsity/sparsity_per_brand.csv")
+    print(" - sparsity/sparsity_missing_variables.csv")
+    print(" - sparsity/sparsity_missing_combinations_top.csv")
+    print(" - sparsity/nyt_articles_by_year.csv")
+    print(" - sparsity/nyt_articles_by_brand_all_years.csv")
 
     if not per_brand.empty:
         median_mention_share = per_brand["weeks_with_mention_gt0_share"].median()

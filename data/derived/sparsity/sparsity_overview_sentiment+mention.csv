@@ -1,6 +1,6 @@
 requirement,rows_ok,share_ok,variables_required
-current_only,515,0.07006802721088436,"NYT_mention,nyt_sentiment"
-current+L1,226,0.03074829931972789,"NYT_mention,nyt_sentiment,NYT_mention_L1,nyt_sentiment_L1"
-current+L1..L2,136,0.01850340136054422,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,nyt_sentiment_L1,nyt_sentiment_L2"
-current+L1..L3,95,0.01292517006802721,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3"
-current+L1..L4,70,0.009523809523809525,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,NYT_mention_L4,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3,nyt_sentiment_L4"
+current_only,3942,0.44272237196765496,"NYT_mention,nyt_sentiment"
+current+L1,3126,0.35107816711590295,"NYT_mention,nyt_sentiment,NYT_mention_L1,nyt_sentiment_L1"
+current+L1..L2,2653,0.2979559748427673,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,nyt_sentiment_L1,nyt_sentiment_L2"
+current+L1..L3,2327,0.2613432165318958,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3"
+current+L1..L4,2092,0.23495058400718777,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,NYT_mention_L4,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3,nyt_sentiment_L4"
