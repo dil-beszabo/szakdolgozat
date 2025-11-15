@@ -71,11 +71,11 @@ Y_{b,t} = \beta_0 + \beta_1\,NYT\_mention_{b,t-\ell} + \beta_2\,NYT\_sentiment_{
 ## 8. Prioritás – Kötelező feladatok vs. ötletek
 
 ### Kötelező (minimálisan teljesítendő)
-- Új változók létrehozása (Meme_volume, Meme_sentiment, Meme_engagement, NYT_mention, NYT_sentiment) heti szinten.
-- Lagolt változók képzése a fenti változókra (t-1, t-2, …).
-- Leíró idősor- és CCF-ábrák elkészítése.
-- Panel regressziós modell becslése fixhatásokkal és lagolt magyarázókkal, brand-szintű klaszterezett hibákkal.
-- Esemény-specifikus (event-study) konfidenciaintervallumok számítása a már meglévő event-stacked grafikonokhoz.
+- ~~Új változók létrehozása (Meme_volume, Meme_sentiment, Meme_engagement, NYT_mention, NYT_sentiment) heti szinten.~~
+- ~~Lagolt változók képzése a fenti változókra (t-1, t-2, …).~~
+- ~~Leíró idősor- és CCF-ábrák elkészítése.~~
+- ~~Panel regressziós modell becslése fixhatásokkal és lagolt magyarázókkal, brand-szintű klaszterezett hibákkal.~~
+- ~~Esemény-specifikus (event-study) konfidenciaintervallumok számítása a már meglévő event-stacked grafikonokhoz.~~
 
 ### Opcionális / továbbfejleszthető
 - További jellemzők a mémekhez (pl. témakategória, alternatív sentiment-mérő).
