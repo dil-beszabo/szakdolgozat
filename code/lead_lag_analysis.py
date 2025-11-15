@@ -18,10 +18,19 @@ def xcorr_by_company(panel: pd.DataFrame, feature: str, max_lag: int = 4) -> pd.
         g = g.sort_values('week_start')
         y = g['num_memes_z'].astype(float).values
         for k in range(1, max_lag + 1):
-            x_lag = g[f'{feature}_L{k}'].values
-            mask = ~np.isnan(x_lag)
+            col = f'{feature}_L{k}'
+            if col not in g.columns:
+                continue
+            x_lag = g[col].astype(float).values
+            # mask out NaNs in both series
+            mask = (~np.isnan(x_lag)) & (~np.isnan(y))
             if mask.sum() > 2:
-                r = np.corrcoef(x_lag[mask], y[mask])[0,1]
+                x_obs = x_lag[mask]
+                y_obs = y[mask]
+                # skip if either series has zero variance (avoids divide-by-zero warnings)
+                if np.nanstd(x_obs) == 0 or np.nanstd(y_obs) == 0:
+                    continue
+                r = float(np.corrcoef(x_obs, y_obs)[0, 1])
                 rows.append({'company': company, 'lag': k, 'r': r})
     return pd.DataFrame(rows)
 
