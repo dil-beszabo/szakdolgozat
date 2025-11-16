@@ -11,10 +11,18 @@
 
 In short, for the “with sentiment” specification we estimate:
 
-\(Y_{b,t} = \alpha_b + \delta_t + \sum_{k=0}^{K} \beta_k\,\text{NYT\_mention}_{b,t-k} + \sum_{k=0}^{K} \theta_k\,\text{nyt\_sentiment}_{b,t-k} + \varepsilon_{b,t}\),
+$$
+Y_{b,t} = \alpha_b + \delta_t + \sum_{k=0}^{K} \beta_k\,\mathrm{NYT\_mention}_{b,t-k} + \sum_{k=0}^{K} \theta_k\,\mathrm{nyt\_sentiment}_{b,t-k} + \varepsilon_{b,t}
+$$
 
 and for “mention‑only” we omit the \(\theta_k\) terms.
 
+### Why create mention-only:
+Sentiment scores are only defined when the New York Times published at least one article about the brand in that week, sentiment coverage is sparse (~7% of brand–weeks). To retain comparability, two model families are estimated:
+
+1. **Mention-only models**, using all brand–weeks, where `NYT_mention_Lk` = 0 indicates absence of coverage.
+2. **Sentiment-including models**, restricted to brand–weeks where sentiment is observed for the current and previous weeks.
+ 
 ### Data and sample
 
 - **Panel**: weekly brand panel loaded from `data/panels/company_weekly_panel_analysis_ready.csv`.
