@@ -4,7 +4,7 @@
 
 - **Kimenetek**: `log1p_meme_volume`, `mean_meme_sentiment`, `log1p_meme_engagement`.
 - **Fő prediktorok**: `NYT_mention`, és egyes specifikációkban `nyt_sentiment`.
-- **Kontroll (baseline)**: késleltetett subreddit activity `subreddit_activity_{t-1}` (heti poszt+komment a brand‑releváns subreddit(ek)ben).
+- **Kontroll (baseline)**: késleltetett `reddit_activity_{t-1}` (heti poszt+komment a dataset egyetlen subredditjében).
 - **Késleltetési szerkezet**: tartalmazzuk az aktuális hetet (k = 0) és a késleltetéseket \(k \in \{1,2,3,4\}\). Robusztaságként kevesebb késleltetéssel (3, 2, 1) is futtatunk.
 - **Fixed effects (TWFE)**: brand fixed effects `C(company)` és calendar-week fixed effects `C(week_fe)`, hogy kontrolláljuk az időben állandó márka‑heterogenitást és a közös heti sokkokat.
 - **Estimator**: OLS a formula API‑n, two‑way fixed effects dummyként felvéve.
@@ -13,7 +13,7 @@
 Röviden, a “with sentiment” specifikációban a következőt becsüljük:
 
 $$
-Y_{b,t} = \alpha_b + \delta_t + \sum_{k=0}^{K} \beta_k\,\mathrm{NYT\_mention}_{b,t-k} + \sum_{k=0}^{K} \theta_k\,\mathrm{nyt\_sentiment}_{b,t-k} + \lambda\,\mathrm{subreddit\_activity}_{b,t-1} + \varepsilon_{b,t}
+Y_{b,t} = \alpha_b + \delta_t + \sum_{k=0}^{K} \beta_k\,\mathrm{NYT\_mention}_{b,t-k} + \sum_{k=0}^{K} \theta_k\,\mathrm{nyt\_sentiment}_{b,t-k} + \lambda\,\mathrm{reddit\_activity}_{b,t-1} + \varepsilon_{b,t}
 $$
 
 és a “mention‑only” esetben a \(\theta_k\) tagokat elhagyjuk.
@@ -28,7 +28,7 @@ $$
 
 - **Panel**: heti brand panel betöltve innen: `data/panels/company_weekly_panel_analysis_ready.csv`.
 - **Week FE key**: `week_fe = week_start.strftime("%Y-%W")`.
-- **Subreddit activity**: a `subreddit_activity` a brand‑releváns subreddit(ek) heti posztolási és kommentelési volumenét méri; ha több brand‑specifikus subreddit létezik, márka szinten aggregáljuk. Mivel a datasetben egy subreddit van, ez a változó a heti platform‑forgalom ingadozásait tükrözi, amelyek korrelálhatnak a mémaktivitással.
+- **Reddit activity**: a `reddit_activity` a datasetben szereplő egyetlen subreddit heti posztolási és kommentelési volumenét méri; a baseline‑ban `reddit_activity_{t-1}` kontrollként szerepel. Ez azért kell, mert ha egy héten nagy a Reddit‑forgalom, több mém születhet a NYT‑tól függetlenül; ezt kontrollálni kell, különben hamis hatást látnánk.
 - **Missing data**: azokat a sorokat eldobjuk, ahol a kimenetben, a FE kulcsokban vagy a bevont prediktorokban (aktuális + szükséges késleltetések) hiányzó érték van.
   - Ennek következtében a “with sentiment” specifikációk kisebb N‑nel futnak, mint a “mention‑only”.
 
@@ -37,7 +37,7 @@ $$
 - **With sentiment (main)**: tartalmazza a `NYT_mention` és `nyt_sentiment` változókat az aktuális héttel és késleltetésekkel.
 - **Mention‑only (robustness/availability)**: csak `NYT_mention` az aktuális héttel és késleltetésekkel.
 - **Lag windows**: \(K \in \{4, 3, 2, 1\}\). Minden K‑ra elmentjük a current és lag koefficienseket ábrázoláshoz/összegzéshez.
-- **Kontrollok**: a baseline tartalmazza a `subreddit_activity_{t-1}` változót.
+- **Kontrollok**: a baseline tartalmazza a `reddit_activity_{t-1}` változót.
 - **Seasonality and global trend**: `C(week_fe)` jelenlétében elhagyjuk a month/holiday dummykat és a globális NYT‑trendet; ezeket csak `C(week_fe)` nélküli robusztasági variánsokban használjuk. Mivel a calendar‑week FE elnyeli az aggregált sokkokat és a globális hírintenzitás trendjeit, a további dummyk (month, holidays) és a globális NYT‑mention összegek \(\delta_t\)‑vel tökéletesen kollineárisak lennének, ezért elhagyjuk őket.
 
 ### Következtetés és tesztek
@@ -51,7 +51,7 @@ $$
 - **Log1p outcomes**: volume/engagement esetén a koefficiensek közelítőleg semi‑elasticities; kis értékek nagyjából százalékos változásként olvashatók a kimenetben egy egységnyi prediktor‑változásra.
 - **Lags**: a `NYT_mention_Lk` (és `nyt_sentiment_Lk`) k héttel a hírsokkok után fennálló asszociációkat ragadnak meg, a current/más késleltetések és a FE feltételével.
 - **Cumulative effects**: a jelentett lag‑sum teszteket és az összegzett koefficienseket használd a teljes késleltetett hatás megvitatásához.
-- **Dynamics**: a baseline OLS nem tartalmaz lagged outcomes; a dinamikus panel variánsok (pl. Arellano–Bond) csak opcionális robusztaságként szerepelnek. A `subreddit_activity_{t-1}` kontroll a márka szintű, időben változó platform‑forgalmat ragadja meg, és késleltetve szerepel a bad‑control kockázat mérséklésére.
+- **Dynamics**: a baseline OLS nem tartalmaz lagged outcomes; a dinamikus panel variánsok (pl. Arellano–Bond) csak opcionális robusztaságként szerepelnek. A `reddit_activity_{t-1}` kontroll a márka szintű, időben változó platform‑forgalmat ragadja meg, és késleltetve szerepel a bad‑control kockázat mérséklésére.
 
 ### Előállított outputok
 
