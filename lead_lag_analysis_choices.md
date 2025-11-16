@@ -1,86 +1,86 @@
-# Lead–Lag Analysis: Methods and Key Choices
+# Lead–Lag Analysis: módszerek és fő választások
 
-This note summarizes the methodological choices implemented in `code/lead_lag_analysis.ipynb` to generate the figures and interpret results.
+Ez a jegyzet összefoglalja a `code/lead_lag_analysis.ipynb` notebookban megvalósított módszertani választásokat, amelyekkel az ábrákat előállítjuk és az eredményeket értelmezzük.
 
-## Data and preprocessing
+## Adat és előfeldolgozás
 
-- Source panel: `data/panels/company_weekly_panel_analysis_ready.csv` (balanced, calendar-complete weekly panel).
-- Time key: `week_start` (weekly frequency); grouping key: `company`.
+- Forrás panel: `data/panels/company_weekly_panel_analysis_ready.csv` (kiegyensúlyozott, naptár‑teljes heti panel).
+- Időkulcs: `week_start` (heti frekvencia); csoportosítási kulcs: `company`.
 
-## Outcome construction
+## Outcome konstrukció
 
-- Main outcome: per‑company z‑score of meme volume with NaN-aware handling of true non-observation:
-  - If `num_memes == 0` and (optionally) `mean_meme_sentiment` is missing, treat as unobserved (NaN) when averaging.
-  - Compute per‑company mean and sd on observed weeks only; z‑score into `num_memes_z_es`.
-  - Alias for plotting/legacy helpers: `num_memes_z = num_memes_z_es`.
-- Alternative outcomes used in robustness:
-  - `num_memes_rel` (relative normalization from panel utilities).
+- Fő outcome: vállalatonkénti z‑score a meme volume‑ra, NaN‑aware kezelés a valódi nem‑megfigyelésre:
+  - Ha `num_memes == 0` és (opcionálisan) hiányzik a `mean_meme_sentiment`, az átlagolásnál tekintsük nem megfigyeltnek (NaN).
+  - A vállalati átlagot és szórást csak a megfigyelt heteken számoljuk; az értékeket z‑score‑oljuk `num_memes_z_es` néven.
+  - Ábra/legacy alias: `num_memes_z = num_memes_z_es`.
+- Robusztasági outcome‑ok:
+  - `num_memes_rel` (relatív normalizálás panel utilokból).
   - `log1p_meme_volume = log1p(num_memes)`.
-  - `log1p_meme_engagement = log1p(meme_engagement)` if engagement is present.
+  - `log1p_meme_engagement = log1p(meme_engagement)`, ha van engagement.
 
-## Event definition and windowing
+## Event definíció és windowing
 
-- Positive events: company‑week at or above the 90th percentile of `mean_pos` within the company.
-- Negative events: company‑week at or above the 90th percentile of `mean_neg` within the company.
-- Event window: symmetric `w = 3` weeks, i.e., τ ∈ {−3,…,0,…,+3}.
-- Unless stated otherwise, overlapping events are allowed; for diagnostics we enforce non‑overlap with a minimum gap of `w`.
+- Positive events: olyan company‑week, amely a vállalaton belüli `mean_pos` 90. percentilise felett van.
+- Negative events: olyan company‑week, amely a vállalaton belüli `mean_neg` 90. percentilise felett van.
+- Event window: szimmetrikus `w = 3` hét, azaz τ ∈ {−3,…,0,…,+3}.
+- Ha külön nem jelezzük, az átfedő események megengedettek; diagnosztikához non‑overlap kikényszerítése min. `w` hétnyi távolsággal.
 
-## Estimation and uncertainty
-- For each event, collect the outcome at each τ, then average across events (equal weight per event).
-- Uncertainty bands: pointwise 95% CIs using `mean ± 1.96 * (sd / sqrt(n))` across events at each τ.
-- Note: CIs treat event windows as independent and do not adjust for serial correlation or multiple testing (kept simple by design).
+## Estimation és bizonytalanság
+- Minden eventhez összegyűjtjük az outcome‑ot minden τ‑nál, majd eventek között átlagolunk (egyenlő súllyal).
+- Uncertainty bands: pointwise 95% CIs a `mean ± 1.96 * (sd / sqrt(n))` képlettel, τ‑nként az eventek felett.
+- Megjegyzés: a CIs független event window‑kat feltételez, nem korrigál serial correlationre vagy multiple testingre (szándékosan egyszerű).
 
-## Diagnostics and robustness checks
+## Diagnostics és robustness checks
 1) Non‑overlap constraint
-- Rebuild events with a minimum distance of `w` weeks and re‑estimate the event studies.
+   - Az eseményeket újraépítjük min. `w` hétnyi távolsággal, és újra‑becsüljük az event study‑kat.
 2) Alignment shift tests
-- Shift identified positive events by −1 and +1 week; re‑estimate to verify alignment (τ=0 response should attenuate when misaligned).
+   - A pozitív eseményeket −1 és +1 héttel eltoljuk; újra‑becslés az igazítás ellenőrzésére (τ=0 válasz gyengül, ha rossz az alignment).
 3) Week‑demeaned outcome
-- Demean `num_memes_z` by the cross‑sectional weekly mean to absorb common weekly shocks and re‑estimate.
-4) Mentions‑spike events and tone split
-- Define events as top 10% of `NYT_mention` within company (non‑overlapping).
-- Re‑estimate overall and split by tone at the event week: `sentiment_score ≥ 0` vs `< 0`.
+   - A `num_memes_z` értékeket heti keresztmetszeti átlaggal demeaneljük a közös heti sokkok elnyelésére, majd újra‑becslünk.
+4) Mentions‑spike events és tone split
+   - Esemény: a vállalaton belüli `NYT_mention` top 10% (non‑overlapping).
+   - Újra‑becslés összesítve és tone szerinti bontásban az event héten: `sentiment_score ≥ 0` vs `< 0`.
 5) Cross‑correlation (lead–lag) check
-- Create L1–L4 lags for predictors and compute company‑level cross‑correlations of `NYT_mention` vs `num_memes_z` to visualize lead/lag structure.
-6) Placebo design (matched on NYT intensity)
-- For each positive/negative event, select a placebo week within the same company, outside ±`w`, matched on `NYT_mention` decile (rank-based). If no match, relax to any week outside ±`w`.
-- Build placebo event windows and compute the same outcome.
+   - L1–L4 lagok a prediktorokra; vállalati szintű cross‑correlation `NYT_mention` és `num_memes_z` között a lead/lag struktúra vizualizálásához.
+6) Placebo design (NYT intensity alapján párosítva)
+   - Minden pozitív/negatív eventhez választunk egy placebo hetet ugyanazon vállalaton belül, ±`w`‑n kívül, `NYT_mention` decil (rank‑based) szerint párosítva. Ha nincs találat, lazítunk: bármely hét ±`w`‑n kívül.
+   - Placebo event window‑k felépítése és ugyanazon outcome kiszámítása.
 7) Event − Placebo difference
-- Compute `Diff(τ) = Mean_event(τ) − Mean_placebo(τ)` with 95% CIs via SE aggregation; report as main robustness result.
+   - `Diff(τ) = Mean_event(τ) − Mean_placebo(τ)` 95% CIs‑szel (SE aggregáció); ezt jelentjük fő robusztasági eredményként.
 
-## Defaults and settings
-- Window: `w = 3` weeks.
-- Percentile threshold for tone events: 90th within company.
-- Descriptive time‑series smoothing: 4‑week moving average (for display only).
-- RNG seed for placebo selection: 42.
-- Equal weighting across events (no brand re‑weighting).
+## Alapbeállítások
+- Window: `w = 3` hét.
+- Percentilis küszöb tone eventekhez: 90th vállalaton belül.
+- Leíró idősor simítás: 4 hetes moving average (csak megjelenítés).
+- RNG seed placebo kiválasztáshoz: 42.
+- Egyenlő súlyozás az eventek között (nincs brand re‑weighting).
 
-## Key outputs (paths)
-- Descriptive time series per brand (examples):
+## Fő outputok (útvonalak)
+- Leíró idősor márkánként (példák):
   - `figures/ts_<brand>_num_articles_vs_num_memes_z.png`
-- Main event‑study CIs (NaN‑aware z outcome):
+- Fő event‑study CIs (NaN‑aware z outcome):
   - `figures/event_pos_num_memes_z_ci.png`
   - `figures/event_neg_num_memes_z_ci.png`
-- Alternative outcomes (relative, log1p):
+- Alternatív outcome‑ok (relative, log1p):
   - `figures/event_pos_num_memes_rel_ci.png`, `figures/event_neg_num_memes_rel_ci.png`
   - `figures/event_pos_log1p_meme_volume_ci.png`, `figures/event_neg_log1p_meme_volume_ci.png`
-  - `figures/event_pos_log1p_meme_engagement_ci.png`, `figures/event_neg_log1p_meme_engagement_ci.png` (if engagement exists)
-- Non‑overlap, alignment, and demeaned diagnostics:
+  - `figures/event_pos_log1p_meme_engagement_ci.png`, `figures/event_neg_log1p_meme_engagement_ci.png` (ha van engagement)
+- Non‑overlap, alignment és demeaned diagnosztikák:
   - `figures/event_pos_num_memes_z_ci_nooverlap.png`, `figures/event_neg_num_memes_z_ci_nooverlap.png`
   - `figures/event_pos_num_memes_z_ci_shift_m1.png`, `figures/event_pos_num_memes_z_ci_shift_p1.png`
   - `figures/event_pos_num_memes_z_demeaned_ci.png`, `figures/event_neg_num_memes_z_demeaned_ci.png`
-- Mentions‑spike events (overall and tone‑split):
+- Mentions‑spike events (overall és tone‑split):
   - `figures/event_mentions_num_memes_z_ci.png`
   - `figures/event_mentions_pos_num_memes_z_ci.png`, `figures/event_mentions_neg_num_memes_z_ci.png`
-- Cross‑correlation figure:
+- Cross‑correlation ábra:
   - `figures/xcorr_NYT_mention_vs_num_memes_z.png`
-- Event − Placebo differences (main robustness):
+- Event − Placebo különbségek (fő robustness):
   - `figures/results/event_diff/event_pos_num_memes_z_diff_ci.png`
   - `figures/results/event_diff/event_neg_num_memes_z_diff_ci.png`
 
-## Interpretation guide (at a glance)
-- Positive (negative) tone events capture unusually positive (negative) news coverage for a brand; the plots show average meme activity before/after those weeks.
-- A significant positive value at τ=0 or τ>0 suggests meme activity contemporaneous with or following news tone spikes; τ<0 patterns indicate pre‑trends.
-- Placebo‑matched differences help separate tone‑specific effects from generic activity associated with high news intensity.
+## Rövid értelmezési útmutató
+- Positive (negative) tone events: szokatlanul pozitív (negatív) hírhangnem a márkáról; az ábrák az átlagos meme activity‑t mutatják az esemény előtti/utáni hetekben.
+- Szignifikáns pozitív érték τ=0‑nál vagy τ>0‑nál: a meme activity együtt mozog vagy követi a news tone spike‑okat; τ<0 minták pre‑trends‑re utalnak.
+- Placebo‑matched különbségek segítenek elválasztani a tone‑specifikus hatásokat a magas news intensity‑hez kapcsolódó általános aktivitástól.
 
 

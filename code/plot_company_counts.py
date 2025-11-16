@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-REPO_ROOT = "/Users/beszabo/bene/topicality-online"
+REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
 DERIVED_DIR = os.path.join(REPO_ROOT, "data", "derived")
 FIG_DIR = os.path.join(REPO_ROOT, "figures")
 

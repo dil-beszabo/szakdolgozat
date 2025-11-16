@@ -83,11 +83,37 @@ A híreket minden cégnél a pozitív (vagy negatív) cikkek átlagos aránya sz
 A legpozitívabb (illetve legnegatívabb) 10%-ba tartozó hetek alkotják az eseményhalmazt, ahol  
 τ = 0 jelöli a „legpozitívabb” vagy „legnegatívabb” hetet.
 
-A diagramok azt mutatják, hogyan változott a cégekről készült mémek normalizált (z-score) száma az esemény hete körül, a cégek saját átlagukhoz viszonyítva.
+Event-studies on num_memes_z, num_memes_rel, and log1p outcomes all show a same-week dip (τ=0) and rebound at τ=1–2; CIs are wide but τ=0 is the most robust. The CCF for NYT_mention vs num_memes_z is moderately negative at short lags and fades toward 0, in line with TWFE.
+# Korlatok
+meme_engagement is sparse (~22%), so treat those CI plots cautiously.
+Facebook/Google/Instagram show much fewer weeks with mentions in 2024—could be real heterogeneity
 
-![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/event_pos_num_memes_z.png)
+Az igazításból fakadó torzítások kezelése érdekében az eseményprofilokat egy placebo-benchmarkhoz viszonyítva értelmezem. A τ = 0 pontnál megjelenő markáns visszaesés a placebo-specifikációkban is megfigyelhető, amikor azokat azonos NYT-megjelenési intenzitásra illesztem. 
+Ez arra utal, hogy a jelenség nagyrészt mechanikus eredetű, és inkább a regresszió az átlag felé hatásából és az időablakok igazításából fakad, semmint valódi sentiment-sokk következménye. A placebo-görbe (Event − Placebo) levonása után nem azonosítható szignifikáns, többlethatást jelentő sentiment-hatás a meme-aktivitásban.”
 
-![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/event_neg_num_memes_z.png)
+---
+# Összesítés – mi HIÁNYZIK még?**
 
-Miután pozitív híreket hoztak le egy cégről több meme készült róla, negatív esetben pedig kevesbb.
+### 1) Kontrollok a modellben
 
+- subreddit FE
+- season dummies
+- overall Reddit activity
+- global NYT trend
+
+### 2) Leíró elemzések
+
+- CCF (lead/lag correlation)
+- Korrelációs mátrix
+- Scatterplotok
+- Egyszerű event-stacked plot (nem kapcsolat a CI-plotokkal)
+--- 
+- Készíts korrelációs mátrixot és két scatterplotot:
+	- NYT_sentiment vs mean_meme_sentiment
+	- NYT_mention vs num_memes (vagy log1p_meme_volume)
+- Adj egy top100 aggregált idősoros ábrát meme_volume vs NYT_count.
+- (Opcionális) Állítsd az event ablakot ±4 hétre a “~30 nap” kéréshez.
+- (Ha van adat) Vegyél fel legalább egy egyszerű heti kontrollt:
+	- overall_reddit_activity_t (össz-mém aktivitás top subredditekben)
+	- overall_NYT_volume_t (top100 brand heti NYT cikkek száma) – bár δ_t ezt lefedi, ellenőrzésnek jó.
+- (Opcionális) Futass egy egyszerű Granger-tesztet brand szinten vagy panel-Granger változatot.

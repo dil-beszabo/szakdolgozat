@@ -60,29 +60,3 @@ def event_study_value(panel: pd.DataFrame, pos_feature: str, neg_feature: str, v
                     if 0 <= j < n and pd.notna(g.loc[j, value_col]):
                         rows_neg.append({'company': company, 'tau': tau, value_col: float(g.loc[j, value_col])})
     return pd.DataFrame(rows_pos), pd.DataFrame(rows_neg)
-
-
-def run():
-    # Z-score event study
-    pos_z, neg_z = event_study_value(panel, pos_feature='mean_pos', neg_feature='mean_neg', value_col='num_memes_z', window=3)
-    plot_event(pos_z, 'num_memes_z', 'Event: Positive news vs normalized (z) meme volume', os.path.join(FIG_DIR, 'event_pos_num_memes_z.png'))
-    plot_event(neg_z, 'num_memes_z', 'Event: Negative news vs normalized (z) meme volume', os.path.join(FIG_DIR, 'event_neg_num_memes_z.png'))
-
-    # Rolling baseline ratio event study
-    pos_r, neg_r = event_study_value(panel, pos_feature='mean_pos', neg_feature='mean_neg', value_col='num_memes_rel', window=3)
-    plot_event(pos_r, 'num_memes_rel', 'Event: Positive news vs relative meme volume', os.path.join(FIG_DIR, 'event_pos_num_memes_rel.png'))
-    plot_event(neg_r, 'num_memes_rel', 'Event: Negative news vs relative meme volume', os.path.join(FIG_DIR, 'event_neg_num_memes_rel.png'))
-
-    # Quick console summary
-    def _summ(df: pd.DataFrame, col: str) -> pd.DataFrame:
-        if df.empty:
-            return pd.DataFrame()
-        return df.groupby('tau')[col].agg(['mean', 'median', 'count'])
-
-    print("\nPositive events (z):\n", _summ(pos_z, 'num_memes_z').to_string())
-    print("\nNegative events (z):\n", _summ(neg_z, 'num_memes_z').to_string())
-    print("\nPositive events (rel):\n", _summ(pos_r, 'num_memes_rel').to_string())
-    print("\nNegative events (rel):\n", _summ(neg_r, 'num_memes_rel').to_string())
-
-if __name__ == '__main__':
-    run()
