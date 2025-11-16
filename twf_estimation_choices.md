@@ -19,7 +19,7 @@ $$
 és a “mention‑only” esetben a \(\theta_k\) tagokat elhagyjuk.
 
 ### Miért van mention‑only:
-`nyt_sentiment` csak akkor definiált, ha a New York Times az adott héten legalább egy cikket publikált a márkáról; a sentiment lefedettség ritka (~7% a brand–hetek között). Az összehasonlíthatóság érdekében két modellcsaládot becslünk:
+`nyt_sentiment` csak akkor definiált, ha a New York Times az adott héten legalább egy cikket publikált a márkáról; a sentiment lefedettség nem teljes: current esetben ~44%, míg a current+L1..L4 minta ~23.5% a brand–hetekből. Az összehasonlíthatóság érdekében két modellcsaládot becslünk:
 
 1. **Mention‑only modellek**, az összes brand–hetet használva, ahol `NYT_mention_Lk` = 0 a lefedettség hiányát jelzi.
 2. **Sentiment‑et tartalmazó modellek**, azokra a brand–hetekre korlátozva, ahol a sentiment a tárgyhéten és a szükséges megelőző heteken megfigyelhető.
