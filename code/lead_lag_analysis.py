@@ -3,15 +3,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-REPO_ROOT = "/Users/beszabo/bene/topicality-online"
-DERIVED_DIR = os.path.join(REPO_ROOT, "data", "derived")
-FIG_DIR = os.path.join(REPO_ROOT, "figures")
-PANEL_CSV = os.path.join(DERIVED_DIR, "company_weekly_panel.csv")
-
-os.makedirs(FIG_DIR, exist_ok=True)
-
-# ---------------- Correlations across lags ---------------- #
-
 def xcorr_by_company(panel: pd.DataFrame, feature: str, max_lag: int = 4) -> pd.DataFrame:
     rows = []
     for company, g in panel.groupby('company'):
@@ -52,13 +43,10 @@ def plot_xcorr(df: pd.DataFrame, title: str, out_path: str):
 
 # ---------------- Event study ---------------- #
 
-def event_study(panel: pd.DataFrame, pos_feature: str, neg_feature: str, window: int = 3, monthly: bool = False):
+def event_study(panel: pd.DataFrame, pos_feature: str, neg_feature: str, window: int = 3):
     rows_pos, rows_neg = [], []
     for company, g in panel.groupby('company'):
-        if monthly:
-            g = g.sort_values('month_start').reset_index(drop=True)
-        else:
-            g = g.sort_values('week_start').reset_index(drop=True)
+        g = g.sort_values('week_start').reset_index(drop=True)
         # thresholds per company
         pos_thresh = g[pos_feature].quantile(0.90)
         neg_thresh = g[neg_feature].quantile(0.90)
@@ -94,23 +82,42 @@ def plot_event(df: pd.DataFrame, value_col: str, title: str, out_path: str):
     plt.savefig(out_path)
     plt.close()
 
-# ---------------- Main ---------------- #
+def add_normalizations(panel: pd.DataFrame) -> pd.DataFrame:
+    panel = panel.sort_values(["company", "week_start"]).copy()
+    # z-score per company
+    mu = panel.groupby("company")["num_memes"].transform("mean")
+    sd = panel.groupby("company")["num_memes"].transform("std").replace(0, np.nan)
+    panel["num_memes_z"] = (panel["num_memes"] - mu) / sd
+    panel["num_memes_z"] = panel["num_memes_z"].fillna(0.0)
+    # ratio to rolling baseline (previous 8 weeks)
+    def _rolling_mean(s: pd.Series) -> pd.Series:
+        return s.shift(1).rolling(window=8, min_periods=3).mean()
 
-def run():
-    panel = pd.read_csv(PANEL_CSV, parse_dates=['week_start'])
-    # Cross-correlations
-    for feat in ['sentiment_score', 'mean_pos', 'mean_neg', 'non_neutral_share', 'num_articles']:
-        df = xcorr_by_company(panel, feat, max_lag=4)
-        out = os.path.join(FIG_DIR, f'xcorr_{feat}.png')
-        plot_xcorr(df, f'Lead-Lag: {feat} vs meme_spike', out)
-        print(f'Saved {out}')
-    # Event study
-    df_pos, df_neg = event_study(panel, pos_feature='mean_pos', neg_feature='mean_neg', window=3)
-    plot_event(df_pos, 'meme_spike', 'Event: Positive news vs meme_spike', os.path.join(FIG_DIR, 'event_pos_meme_spike.png'))
-    plot_event(df_neg, 'meme_spike', 'Event: Negative news vs meme_spike', os.path.join(FIG_DIR, 'event_neg_meme_spike.png'))
-    plot_event(df_pos, 'num_memes', 'Event: Positive news vs num_memes', os.path.join(FIG_DIR, 'event_pos_num_memes.png'))
-    plot_event(df_neg, 'num_memes', 'Event: Negative news vs num_memes', os.path.join(FIG_DIR, 'event_neg_num_memes.png'))
-    print('Event-study plots saved.')
+    roll = panel.groupby("company")["num_memes"].apply(_rolling_mean).reset_index(level=0, drop=True)
+    panel["num_memes_rel"] = panel["num_memes"] / (roll.replace(0, np.nan))
+    panel["num_memes_rel"] = panel["num_memes_rel"].replace([np.inf, -np.inf], np.nan).fillna(1.0)
+    return panel
 
-if __name__ == '__main__':
-    run()
+
+def event_study_value(panel: pd.DataFrame, pos_feature: str, neg_feature: str, value_col: str, window: int = 3,
+                      pos_q: float = 0.90, neg_q: float = 0.90):
+    rows_pos, rows_neg = [], []
+    for company, g in panel.groupby('company'):
+        g = g.sort_values('week_start').reset_index(drop=True)
+        if g.empty:
+            continue
+        pos_thresh = g[pos_feature].quantile(pos_q)
+        neg_thresh = g[neg_feature].quantile(neg_q)
+        n = len(g)
+        for i in range(n):
+            if pd.notna(g.loc[i, pos_feature]) and g.loc[i, pos_feature] >= pos_thresh:
+                for tau in range(-window, window+1):
+                    j = i + tau
+                    if 0 <= j < n and pd.notna(g.loc[j, value_col]):
+                        rows_pos.append({'company': company, 'tau': tau, value_col: float(g.loc[j, value_col])})
+            if pd.notna(g.loc[i, neg_feature]) and g.loc[i, neg_feature] >= neg_thresh:
+                for tau in range(-window, window+1):
+                    j = i + tau
+                    if 0 <= j < n and pd.notna(g.loc[j, value_col]):
+                        rows_neg.append({'company': company, 'tau': tau, value_col: float(g.loc[j, value_col])})
+    return pd.DataFrame(rows_pos), pd.DataFrame(rows_neg)

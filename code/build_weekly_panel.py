@@ -30,7 +30,7 @@ from process_nyt_articles import (
     preprocess_article_text,
     split_articles,
 )
-from lead_lag_normalized import add_normalizations
+from lead_lag_analysis import add_normalizations
 
 # -------------------------- Config -------------------------- #
 REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
