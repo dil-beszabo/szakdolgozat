@@ -107,7 +107,7 @@ def load_company_synonyms(syn_path: str) -> Dict[str, List[Pattern]]:
 
 
 _ALIAS_PATTERNS: Dict[str, List[Pattern]] = load_company_synonyms(
-    os.path.join(_repo_root(), 'code', 'company_synonyms.txt')
+    os.path.join(_repo_root(), 'data', 'text_lists', 'company_synonyms.txt')
 )
 
 def preprocess_article_text(article_content):
