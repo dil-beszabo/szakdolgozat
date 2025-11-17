@@ -1,1 +1,122 @@
-# szakdolgozat
+# Mi van meg
+
+[TWF Panel regression](twf_estimation_choices.md)
+
+[Time Series Diagrams](lead_lag_analysis_choices.md)
+
+[XCorr](lead_lag_analysis_choices.md)
+
+[Event-study CI](lead_lag_analysis_choices.md)
+
+[Event − Placebo difference](lead_lag_analysis_choices.md)
+
+[Sanity checks](lead_lag_analysis_choices.md)
+
+
+
+# Mi hiányzik
+Korrelációs mátrix
+
+Két scatterplot:
+- NYT_sentiment vs mean_meme_sentiment – hiányzik.
+- NYT_mention vs num_memes (vagy log1p_meme_volume) – hiányzik.
+- 
+Top100 aggregált idősor (meme_volume vs NYT_count)(jelenleg márkánkénti TS-ek vannak: figures/descriptive/timeseries/...).
+
+Granger-teszt
+
+---
+# <mark style="background: #FF5582A6;">Topic relevancy</mark>
+....
+
+# <mark style="background: #FFB8EBA6;">Building the dataset</mark>
+....
+
+
+# <mark style="background: #ABF7F7A6;">Building the OCR</mark>
+....
+
+# <mark style="background: #BBFABBA6;">Building the classifier</mark>
+....
+
+# <mark style="background: #FFF3A3A6;">Using CLIP instead</mark>
+....
+
+# <mark style="background: #FFB86CA6;">Getting the distribution</mark>
+....
+Engagement mutato:
+- score = upvotes − downvotes, így előfordulhatnak 0-nál kisebb értékek.
+
+- A clip(lower=0) nullára vágja a negatívakat, ezzel elkerülöd a log() hibát és a kevés downvote-tól nem torzul a skála.
+
+- np.log1p(x) pontosan log(1 + x), ami stabil kis értékeknél és nem kell előtte float-tá konvertálni.
+
+
+# <mark style="background: #ADCCFFA6;">Fetching NYT data</mark>
+Bar diagram of num_of_memes and num_of_articles per companies
+![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/company_num_articles.png)
+![bar_chart](https://github.com/dil-beszabo/szakdolgozat/blob/main/company_num_memes.png)
+
+
+
+| Top companies by memes: | num_memes | Top companies by articles: | num_articles |
+| ----------------------- | --------- | -------------------------- | ------------ |
+| Apple                   | 331       | Facebook                   | 1990         |
+| Google                  | 323       | Youtube                    | 1884         |
+| Youtube                 | 282       | Netflix                    | 1830         |
+| Microsoft               | 240       | Google                     | 1591         |
+| Nintendo                | 125       | Instagram                  | 1560         |
+| Instagram               | 113       | Apple                      | 1475         |
+| Netflix                 | 99        | Microsoft                  | 1348         |
+| Amazon                  | 89        | Amazon                     | 1243         |
+| Facebook                | 80        | Tesla                      | 1030         |
+| Disney                  | 78        | Spotify                    | 917          |
+
+# <mark style="background: #D2B3FFA6;">Context Engineering</mark>
+A `topicality-online` kutatas repojat felhasznalva, a `lead_lag_analysis_prompt.md` prompt megirasa tortent, amivel ....
+
+# <mark style="background: #CACFD9A6;">Why FinBert</mark>
+Certain terms can have multiple meaning, we need them in the financial context
+
+## Adding aliases
+By incorporating synonyms and alternative spellings for company names, the analysis can now:
+1. Capture More Relevant Data: Articles that previously might have been missed because they used an alias instead of the canonical company name are now included. This leads to a more comprehensive dataset for sentiment analysis.
+2. Increase Signal Strength: With more relevant articles contributing to the sentiment scores, the "signal" of positive or negative news events becomes clearer and often more pronounced. This translates to stronger peaks and deeper troughs in the event study plots.
+3. Reinforce Lead-Lag Patterns: The overall patterns of how meme activity responds to news events (e.g., meme spikes often preceding or following news sentiment) are generally reinforced, indicating that the alias logic is helping to identify these relationships more accurately, rather than distorting them.
+## Normalise meme volumes 
+
+A mémek számának normalizálása, mint például a z-pontszám (num_memes_z) további segítséget nyújt. Ez azért fontos, mert a különböző cégek mémaktivitása eltérő lehet (pl. egy kis cég 10 mémje nagy, egy nagy cégnek pedig kevés). A normalizálás lehetővé teszi, hogy a mémaktivitás csúcsait és mélypontjait objektíven hasonlítsuk össze a cégek között, és jobban azonosítsuk az igazi "tüskéket" (spike-okat).
+- Z-score (num_memes_z): Azt mutatja meg, hogy egy adott heti mémaktivitás mennyire tér el egy cég saját történelmi átlagától, standard deviációban kifejezve. Ez segít összehasonlítani a kiemelkedés nagyságát különböző cégek között, függetlenül attól, hogy melyiknek van alapvetően magasabb mémaktivitása.
+
+# Meme sentiment
+1. Zero-shot CLIP on the raw image
+	- _clip_sentiment(path)
+	- Prompts passed to CLIP: ["a negative meme", "a positive meme"]
+	- We feed image + those two texts through CLIP.
+	- CLIP returns a 1×2 similarity vector (logits_per_image).
+	- Soft-max → probabilities →pos_c = probs[1], neg_c = probs[0].
+	- Sentiment component from image alone: pos_c – neg_c.
+2. EasyOCR → FinBERT on extracted text
+	- _ocr_finbert_sentiment(path)
+	- EasyOCR reads all English text from the image.
+	- The concatenated OCR string is sent through FinBERT (pipeline('text-classification',…, top_k=None)).
+	- FinBERT yields three scores; we keep pos_t = out["Positive"], neg_t = out["Negative"].
+	- Text-based sentiment component: pos_t – neg_t.
+
+
+# <mark style="background: #FF5582A6;">Results</mark>
+
+Heti bontásban minden céghez kiszámoltam az átlagos memeszámot és a heti hírek sentimentjét.  
+A híreket minden cégnél a pozitív (vagy negatív) cikkek átlagos aránya szerint rangsoroltam.  
+A legpozitívabb (illetve legnegatívabb) 10%-ba tartozó hetek alkotják az eseményhalmazt, ahol  
+τ = 0 jelöli a „legpozitívabb” vagy „legnegatívabb” hetet.
+
+Event-studies on num_memes_z, num_memes_rel, and log1p outcomes all show a same-week dip (τ=0) and rebound at τ=1–2; CIs are wide but τ=0 is the most robust. The CCF for NYT_mention vs num_memes_z is moderately negative at short lags and fades toward 0, in line with TWFE.
+# Korlatok
+meme_engagement is sparse , so treat those CI plots cautiously.
+Facebook/Google/Instagram show much fewer weeks with mentions in 2024—could be real heterogeneity
+
+Az igazításból fakadó torzítások kezelése érdekében az eseményprofilokat egy placebo-benchmarkhoz viszonyítva értelmezem. A τ = 0 pontnál megjelenő markáns visszaesés a placebo-specifikációkban is megfigyelhető, amikor azokat azonos NYT-megjelenési intenzitásra illesztem. 
+Ez arra utal, hogy a jelenség nagyrészt mechanikus eredetű, és inkább a regresszió az átlag felé hatásából és az időablakok igazításából fakad, semmint valódi sentiment-sokk következménye. A placebo-görbe (Event − Placebo) levonása után nem azonosítható szignifikáns, többlethatást jelentő sentiment-hatás a meme-aktivitásban.”
+
+---
