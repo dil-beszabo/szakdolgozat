@@ -1,4 +1,5 @@
 import os
+import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -121,3 +122,143 @@ def event_study_value(panel: pd.DataFrame, pos_feature: str, neg_feature: str, v
                     if 0 <= j < n and pd.notna(g.loc[j, value_col]):
                         rows_neg.append({'company': company, 'tau': tau, value_col: float(g.loc[j, value_col])})
     return pd.DataFrame(rows_pos), pd.DataFrame(rows_neg)
+
+# ---------------- Notebook helper utilities (moved from notebook) ---------------- #
+
+def sanitize_filename(name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_-]+", "_", str(name)).strip("_")
+
+
+def plot_event_ci(df: pd.DataFrame, value_col: str, title: str, out_path: str):
+    if df is None or df.empty:
+        return
+    agg = df.groupby("tau")[value_col].agg(["mean", "std", "count"]).reset_index()
+    agg["se"] = agg["std"] / np.sqrt(agg["count"].clip(lower=1))
+    agg["lo"] = agg["mean"] - 1.96 * agg["se"]
+    agg["hi"] = agg["mean"] + 1.96 * agg["se"]
+
+    plt.figure(figsize=(6, 4))
+    plt.plot(agg["tau"], agg["mean"], marker="o", label="Mean")
+    plt.fill_between(agg["tau"], agg["lo"], agg["hi"], alpha=0.2, label="95% CI")
+    plt.axvline(0, color="gray", linestyle="--", linewidth=1)
+    plt.xlabel("Weeks around event")
+    plt.ylabel(f"Mean {value_col}")
+    plt.title(title)
+    plt.legend(loc="best", frameon=False)
+    plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
+
+
+def plot_brand_timeseries(panel: pd.DataFrame,
+                          company: str,
+                          left_col: str = "num_articles",
+                          right_col: str = "num_memes_z",
+                          smooth: int = 0,
+                          out_path: str | None = None):
+    g = panel.loc[panel["company"] == company].sort_values("week_start").copy()
+    if g.empty:
+        return
+
+    x = g["week_start"]
+    left = g[left_col].astype(float)
+    right = g[right_col].astype(float)
+
+    if smooth and smooth > 1:
+        left = left.rolling(window=smooth, min_periods=1).mean()
+        right = right.rolling(window=smooth, min_periods=1).mean()
+
+    fig, ax1 = plt.subplots(figsize=(9, 3.5))
+    color_left, color_right = "#1f77b4", "#d62728"
+
+    ax1.plot(x, left, color=color_left, label=left_col)
+    ax1.set_xlabel("Week")
+    ax1.set_ylabel(left_col, color=color_left)
+    ax1.tick_params(axis="y", labelcolor=color_left)
+
+    ax2 = ax1.twinx()
+    ax2.plot(x, right, color=color_right, label=right_col, alpha=0.85)
+    ax2.set_ylabel(right_col, color=color_right)
+    ax2.tick_params(axis="y", labelcolor=color_right)
+
+    fig.suptitle(f"{company}: {left_col} vs {right_col}")
+    fig.tight_layout()
+
+    if out_path:
+        plt.savefig(out_path)
+        plt.close()
+    else:
+        plt.show()
+
+
+def find_events(g: pd.DataFrame, feature: str, q: float, window: int) -> list[int]:
+    """Return indices i in g (sorted by week_start) where feature >= q-quantile."""
+    thresh = g[feature].quantile(q)
+    return [i for i in range(len(g)) if pd.notna(g.loc[i, feature]) and g.loc[i, feature] >= thresh]
+
+
+def enforce_non_overlap(event_idx: list[int], min_gap: int) -> list[int]:
+    kept: list[int] = []
+    last = -10_000
+    for i in sorted(event_idx):
+        if i - last > min_gap:
+            kept.append(i)
+            last = i
+    return kept
+
+
+def event_study_from_indices(panel: pd.DataFrame, events: dict[str, list[int]], value_col: str, window: int) -> pd.DataFrame:
+    rows = []
+    for company, g in panel.groupby("company"):
+        g = g.sort_values("week_start").reset_index(drop=True)
+        idxs = events.get(company, [])
+        n = len(g)
+        for i in idxs:
+            for tau in range(-window, window + 1):
+                j = i + tau
+                if 0 <= j < n and pd.notna(g.loc[j, value_col]):
+                    rows.append({"company": company, "tau": tau, value_col: float(g.loc[j, value_col])})
+    return pd.DataFrame(rows)
+
+
+def build_event_dict(panel: pd.DataFrame, feature: str, q: float, window: int, non_overlapping: bool, shift: int = 0) -> dict[str, list[int]]:
+    out: dict[str, list[int]] = {}
+    for company, g in panel.groupby("company"):
+        g = g.sort_values("week_start").reset_index(drop=True)
+        idxs = find_events(g, feature, q, window)
+        if shift:
+            idxs = [i + shift for i in idxs if 0 <= i + shift < len(g)]
+        if non_overlapping:
+            idxs = enforce_non_overlap(idxs, min_gap=window)
+        out[company] = idxs
+    return out
+
+
+def plot_diff_ci(event_df: pd.DataFrame, placebo_df: pd.DataFrame, value_col: str, title: str, out_path: str):
+    if event_df is None or event_df.empty or placebo_df is None or placebo_df.empty:
+        return
+    e = event_df.groupby("tau")[value_col].agg(["mean", "std", "count"]).rename(columns={"mean": "e_mean", "std": "e_std", "count": "e_n"})
+    p = placebo_df.groupby("tau")[value_col].agg(["mean", "std", "count"]).rename(columns={"mean": "p_mean", "std": "p_std", "count": "p_n"})
+    agg = e.join(p, how="inner").reset_index()
+    if agg.empty:
+        return
+    agg["e_se"] = agg["e_std"] / np.sqrt(agg["e_n"].clip(lower=1))
+    agg["p_se"] = agg["p_std"] / np.sqrt(agg["p_n"].clip(lower=1))
+    agg["diff"] = agg["e_mean"] - agg["p_mean"]
+    agg["se_diff"] = np.sqrt(agg["e_se"] ** 2 + agg["p_se"] ** 2)
+    agg["lo"] = agg["diff"] - 1.96 * agg["se_diff"]
+    agg["hi"] = agg["diff"] + 1.96 * agg["se_diff"]
+
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    plt.figure(figsize=(6, 4))
+    plt.plot(agg["tau"], agg["diff"], marker="o", label="Event − Placebo")
+    plt.fill_between(agg["tau"], agg["lo"], agg["hi"], alpha=0.2, label="95% CI")
+    plt.axhline(0, color="gray", linewidth=1)
+    plt.axvline(0, color="gray", linestyle="--", linewidth=1)
+    plt.xlabel("Weeks around event")
+    plt.ylabel(f"Diff {value_col}")
+    plt.title(title)
+    plt.legend(loc="best", frameon=False)
+    plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
