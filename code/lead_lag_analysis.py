@@ -4,11 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # ---- Column naming convention (single source of truth) ---- #
-NYT_POS = "nyt_pos_share"
-NYT_NEG = "nyt_neg_share"
-NYT_SENT = "nyt_sentiment"
-NYT_NON_NEUTRAL = "nyt_non_neutral_share"
-NYT_COUNT = "NYT_mention"  # keep original produced by build_weekly_panel
+NYT_POS = "mean_pos"
+NYT_NEG = "mean_neg"
+NYT_SENT = "sentiment_score"
+NYT_NON_NEUTRAL = "non_neutral_share"
+NYT_COUNT = "NYT_mention"
 
 # outcome columns
 MEME_COUNT = "num_memes"
@@ -311,17 +311,136 @@ def plot_diff_ci(event_df: pd.DataFrame, placebo_df: pd.DataFrame, value_col: st
 def run_alt_outcome_event_studies(panel: pd.DataFrame, fig_dir: str) -> None:
     """
     Produce CI plots for num_memes_rel and log1p outcomes.
-    Re-creates ‘alternative outcome’ section of the notebook.
+    Re-creates 'alternative outcome' section of the notebook.
     """
-    # (→ paste the existing logic, but use MEME_REL etc. constants)
+    # Ensure alt outcomes exist
+    panel['log1p_meme_volume'] = np.log1p(panel[MEME_COUNT].fillna(0))
+    if 'meme_engagement' in panel.columns:
+        panel['log1p_meme_engagement'] = np.log1p(panel['meme_engagement'].fillna(0))
+    
+    # num_memes_rel events
+    pos_rel, neg_rel = event_study_value(
+        panel, pos_feature='mean_pos', neg_feature='mean_neg',
+        value_col=MEME_REL, window=3
+    )
+    plot_event_ci(pos_rel, MEME_REL,
+                  'Event: Positive news vs relative meme volume (95% CI)',
+                  os.path.join(fig_dir, 'appendix/alt-outcomes/event_pos_num_memes_rel_ci.png'))
+    plot_event_ci(neg_rel, MEME_REL,
+                  'Event: Negative news vs relative meme volume (95% CI)',
+                  os.path.join(fig_dir, 'appendix/alt-outcomes/event_neg_num_memes_rel_ci.png'))
+    
+    # log1p volume
+    pos_logv, neg_logv = event_study_value(
+        panel, pos_feature='mean_pos', neg_feature='mean_neg',
+        value_col='log1p_meme_volume', window=3
+    )
+    plot_event_ci(pos_logv, 'log1p_meme_volume',
+                  'Event: Positive news vs log1p meme volume (95% CI)',
+                  os.path.join(fig_dir, 'appendix/alt-outcomes/event_pos_log1p_meme_volume_ci.png'))
+    plot_event_ci(neg_logv, 'log1p_meme_volume',
+                  'Event: Negative news vs log1p meme volume (95% CI)',
+                  os.path.join(fig_dir, 'appendix/alt-outcomes/event_neg_log1p_meme_volume_ci.png'))
+    
+    # log1p engagement if available
+    if 'log1p_meme_engagement' in panel.columns:
+        pos_loge, neg_loge = event_study_value(
+            panel, pos_feature='mean_pos', neg_feature='mean_neg',
+            value_col='log1p_meme_engagement', window=3
+        )
+        plot_event_ci(pos_loge, 'log1p_meme_engagement',
+                      'Event: Positive news vs log1p meme engagement (95% CI)',
+                      os.path.join(fig_dir, 'appendix/alt-outcomes/event_pos_log1p_meme_engagement_ci.png'))
+        plot_event_ci(neg_loge, 'log1p_meme_engagement',
+                      'Event: Negative news vs log1p meme engagement (95% CI)',
+                      os.path.join(fig_dir, 'appendix/alt-outcomes/event_neg_log1p_meme_engagement_ci.png'))
+    
+    print('Saved alternative outcome CI event-study plots.')
 
 def run_event_alignment_diagnostics(panel: pd.DataFrame, fig_dir: str) -> None:
     """No-overlap, ±1-week shift, and week-demeaned diagnostics."""
-    # (→ paste block 5)
+    win = 3
+    
+    # 1) Non-overlapping event windows
+    pos_events_noov = build_event_dict(panel, 'mean_pos', q=0.90, non_overlapping=True, min_gap=win)
+    neg_events_noov = build_event_dict(panel, 'mean_neg', q=0.90, non_overlapping=True, min_gap=win)
+    
+    pos_noov = event_study_from_indices(panel, pos_events_noov, MEME_Z, window=win)
+    neg_noov = event_study_from_indices(panel, neg_events_noov, MEME_Z, window=win)
+    
+    plot_event_ci(pos_noov, MEME_Z,
+                  'Event (no-overlap): Positive news vs num_memes_z',
+                  os.path.join(fig_dir, 'appendix/alignment-shifts/event_pos_num_memes_z_ci_nooverlap.png'))
+    plot_event_ci(neg_noov, MEME_Z,
+                  'Event (no-overlap): Negative news vs num_memes_z',
+                  os.path.join(fig_dir, 'appendix/alignment-shifts/event_neg_num_memes_z_ci_nooverlap.png'))
+    
+    print(f'Events kept (pos/neg): {sum(len(v) for v in pos_events_noov.values())} {sum(len(v) for v in neg_events_noov.values())}')
+    
+    # 2) Alignment shift tests (shift events by -1 and +1 week)
+    pos_events_m1 = build_event_dict(panel, 'mean_pos', q=0.90, non_overlapping=True, shift=-1, min_gap=win)
+    pos_events_p1 = build_event_dict(panel, 'mean_pos', q=0.90, non_overlapping=True, shift=+1, min_gap=win)
+    
+    for lab, ev in [('shift_m1', pos_events_m1), ('shift_p1', pos_events_p1)]:
+        dfv = event_study_from_indices(panel, ev, MEME_Z, window=win)
+        out = os.path.join(fig_dir, f'appendix/alignment-shifts/event_pos_num_memes_z_ci_{lab}.png')
+        plot_event_ci(dfv, MEME_Z, f'Event (pos, {lab}): num_memes_z', out)
+        if not dfv.empty:
+            tau0_mean = dfv[dfv['tau'] == 0][MEME_Z].mean()
+            print(f'{lab} tau0 mean= {tau0_mean}')
+    
+    # 3) Week-demeaned outcomes
+    wk_mean = panel.groupby('week_start')[MEME_Z].transform('mean')
+    panel['num_memes_z_dm'] = panel[MEME_Z] - wk_mean
+    
+    pos_dm = event_study_from_indices(panel, pos_events_noov, 'num_memes_z_dm', window=win)
+    neg_dm = event_study_from_indices(panel, neg_events_noov, 'num_memes_z_dm', window=win)
+    
+    plot_event_ci(pos_dm, 'num_memes_z_dm',
+                  'Event (demeaned): Positive news vs num_memes_z',
+                  os.path.join(fig_dir, 'appendix/week-demeaned/event_pos_num_memes_z_demeaned_ci.png'))
+    plot_event_ci(neg_dm, 'num_memes_z_dm',
+                  'Event (demeaned): Negative news vs num_memes_z',
+                  os.path.join(fig_dir, 'appendix/week-demeaned/event_neg_num_memes_z_demeaned_ci.png'))
+    
+    print('Saved no-overlap, shift tests, and demeaned-week diagnostics.')
 
 def run_nyt_spike_event_study(panel: pd.DataFrame, fig_dir: str) -> None:
     """Positive / negative NYT-tone spikes vs meme volume."""
-    # (→ your new NYT_POS / NYT_NEG block)
+    win = 3
+    
+    # Event definition: top 10% NYT_mention per company, non-overlapping
+    mention_events = build_event_dict(panel, NYT_COUNT, q=0.90, non_overlapping=True, min_gap=win)
+    
+    # Unconditional on tone
+    m_ev = event_study_from_indices(panel, mention_events, MEME_Z, window=win)
+    plot_event_ci(m_ev, MEME_Z,
+                  'Event (mentions spikes): num_memes_z',
+                  os.path.join(fig_dir, 'appendix/mentions-as-events/event_mentions_num_memes_z_ci.png'))
+    
+    # Split by tone sign at event week (sentiment_score >= 0 vs < 0)
+    pos_split: dict[str, list[int]] = {}
+    neg_split: dict[str, list[int]] = {}
+    
+    for company, g in panel.groupby('company'):
+        g = g.sort_values('week_start').reset_index(drop=True)
+        idxs = mention_events.get(company, [])
+        pos_idx = [i for i in idxs if pd.notna(g.loc[i, 'sentiment_score']) and g.loc[i, 'sentiment_score'] >= 0]
+        neg_idx = [i for i in idxs if pd.notna(g.loc[i, 'sentiment_score']) and g.loc[i, 'sentiment_score'] < 0]
+        pos_split[company] = pos_idx
+        neg_split[company] = neg_idx
+    
+    m_pos = event_study_from_indices(panel, pos_split, MEME_Z, window=win)
+    m_neg = event_study_from_indices(panel, neg_split, MEME_Z, window=win)
+    
+    plot_event_ci(m_pos, MEME_Z,
+                  'Event (mentions spikes, pos tone): num_memes_z',
+                  os.path.join(fig_dir, 'appendix/mentions-as-events/event_mentions_pos_num_memes_z_ci.png'))
+    plot_event_ci(m_neg, MEME_Z,
+                  'Event (mentions spikes, neg tone): num_memes_z',
+                  os.path.join(fig_dir, 'appendix/mentions-as-events/event_mentions_neg_num_memes_z_ci.png'))
+    
+    print('Saved NYT mention spike event-study plots.')
 
 # ---- Placebo helpers ---- #
 def build_placebo_panel(panel: pd.DataFrame,
@@ -329,17 +448,101 @@ def build_placebo_panel(panel: pd.DataFrame,
                         value_col: str,
                         window: int = 3) -> pd.DataFrame:
     """Return placebo windows matched on NYT_mention decile."""
-    # (→ move placebo_from_events here)
+    rows = []
+    for company, g in panel.groupby("company"):
+        g = g.sort_values("week_start").reset_index(drop=True)
+        event_idxs = events.get(company, [])
+        if not event_idxs:
+            continue
+        
+        # Compute deciles for NYT_mention within this company
+        g['nyt_decile'] = _company_deciles(g[NYT_COUNT], q=10)
+        
+        # For each event, find placebo candidates in same decile
+        n = len(g)
+        for i_event in event_idxs:
+            decile = g.loc[i_event, 'nyt_decile']
+            event_nyt = g.loc[i_event, NYT_COUNT]
+            
+            # Candidate placebos: same decile, exclude event window
+            candidates = [
+                j for j in range(n)
+                if g.loc[j, 'nyt_decile'] == decile
+                and abs(j - i_event) > window
+            ]
+            
+            # Pick closest by NYT_mention value
+            if candidates:
+                diffs = [abs(g.loc[j, NYT_COUNT] - event_nyt) for j in candidates]
+                best = candidates[np.argmin(diffs)]
+                
+                # Extract placebo window
+                for tau in range(-window, window + 1):
+                    j = best + tau
+                    if 0 <= j < n and pd.notna(g.loc[j, value_col]):
+                        rows.append({
+                            "company": company,
+                            "tau": tau,
+                            value_col: float(g.loc[j, value_col])
+                        })
+    
+    return pd.DataFrame(rows)
+
+import numpy as np
+
+rng = np.random.default_rng(42)
+
+# Helper: compute deciles within company using rank to avoid ties issues
+def _company_deciles(s: pd.Series, q: int = 10) -> pd.Series:
+    r = s.rank(method='first')
+    try:
+        return pd.qcut(r, q, labels=False, duplicates='drop')
+    except Exception:
+        # Fallback to single bin if not enough unique values
+        return pd.Series(0, index=s.index)
+
+def event_study_from_indices(panel: pd.DataFrame, events: dict[str, list[int]], value_col: str, window: int) -> pd.DataFrame:
+    rows = []
+    for company, g in panel.groupby("company"):
+        g = g.sort_values("week_start").reset_index(drop=True)
+        idxs = events.get(company, [])
+        n = len(g)
+        for i in idxs:
+            for tau in range(-window, window + 1):
+                j = i + tau
+                if 0 <= j < n and pd.notna(g.loc[j, value_col]):
+                    rows.append({"company": company, "tau": tau, value_col: float(g.loc[j, value_col])})
+    return pd.DataFrame(rows)
+
 
 def run_placebo_event_study(panel: pd.DataFrame,
                             pos_events: dict, neg_events: dict,
                             fig_dir: str, window: int = 3) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Plot placebo CIs and return the two DF objects."""
-    # (→ wrapper around build_placebo_panel + plot_event_ci)
+    # Build placebo windows matched on NYT_mention deciles
+    pos_placebo = build_placebo_panel(panel, pos_events, value_col=MEME_Z, window=window)
+    neg_placebo = build_placebo_panel(panel, neg_events, value_col=MEME_Z, window=window)
+
+    # Plot and quick comparison at tau=0
+    plot_event_ci(pos_placebo, MEME_Z,
+                  'Placebo (pos events, matched by NYT decile)',
+                  os.path.join(fig_dir, 'appendix/placebo/placebo_pos_num_memes_z_ci.png'))
+    plot_event_ci(neg_placebo, MEME_Z,
+                  'Placebo (neg events, matched by NYT decile)',
+                  os.path.join(fig_dir, 'appendix/placebo/placebo_neg_num_memes_z_ci.png'))
+
+    if not pos_placebo.empty:
+        tau0_mean = float(pos_placebo[pos_placebo['tau'] == 0][MEME_Z].mean())
+        print(f'Placebo pos tau0 mean = {tau0_mean}')
+    if not neg_placebo.empty:
+        tau0_mean = float(neg_placebo[neg_placebo['tau'] == 0][MEME_Z].mean())
+        print(f'Placebo neg tau0 mean = {tau0_mean}')
+    
+    return pos_placebo, neg_placebo
 
 def run_event_placebo_diff(event_df: pd.DataFrame,
                            placebo_df: pd.DataFrame,
                            value_col: str, title: str,
                            out_path: str) -> None:
     """Δ-in-CI plot."""
-    # (→ existing plot_diff_ci block)
+    plot_diff_ci(event_df, placebo_df, value_col, title, out_path)

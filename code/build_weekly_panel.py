@@ -37,11 +37,12 @@ REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
 NYT_DIR = os.path.join(REPO_ROOT, "data", "nyt")
 PRED_IMG_DIR = os.path.join(REPO_ROOT, "data", "prediction_images")
 DERIVED_DIR = os.path.join(REPO_ROOT, "data", "derived")
+panel_dir = os.path.join(REPO_ROOT, "data", "panels")
 
-NYT_OUT = os.path.join(DERIVED_DIR, "nyt_weekly_sentiment.csv")
-MEMES_OUT = os.path.join(DERIVED_DIR, "memes_weekly_activity.csv")
-PANEL_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_enriched.csv")
-ANALYSIS_OUT = os.path.join(DERIVED_DIR, "company_weekly_panel_analysis_ready.csv")
+NYT_OUT = os.path.join(panel_dir, "nyt_weekly_sentiment.csv")
+MEMES_OUT = os.path.join(panel_dir, "memes_weekly_activity.csv")
+PANEL_OUT = os.path.join(panel_dir, "company_weekly_panel_enriched.csv")
+ANALYSIS_OUT = os.path.join(panel_dir, "company_weekly_panel_analysis_ready.csv")
 
 # Minimum publication date to include NYT articles in aggregates
 NYT_MIN_DATE = pd.Timestamp("2023-01-01")
@@ -307,21 +308,26 @@ def make_lags(panel: pd.DataFrame, by: str, date_col: str, cols: List[str], max_
 
 
 if __name__ == "__main__":
-    # Orchestrate the build and save of NYT sentiment, meme activity, and the combined panel.
+    # Check if intermediates exist
+    if os.path.exists(NYT_OUT):
+        print(f"Loading cached NYT sentiment from {NYT_OUT}")
+        nyt_weekly = pd.read_csv(NYT_OUT)
+        nyt_weekly['week_start'] = pd.to_datetime(nyt_weekly['week_start'])
+    else:
+        print("Building NYT weekly sentiment...")
+        nyt_weekly = build_nyt_weekly(NYT_DIR, num_processes=multiprocessing.cpu_count())
+        nyt_weekly.to_csv(NYT_OUT, index=False)
+        print("Saved:", NYT_OUT)
 
-    print("Building NYT weekly sentiment...")
-    nyt_weekly = build_nyt_weekly(NYT_DIR, num_processes=multiprocessing.cpu_count())
-    nyt_weekly.to_csv(NYT_OUT, index=False)
-    print("Saved:", NYT_OUT)
-    print(nyt_weekly.head().to_string(index=False))
-
-    print("\nBuilding memes weekly activity...")
-  
-    print("Building memes weekly activity (first run, this can be slow)...")
-    memes_weekly = build_memes_weekly(PRED_IMG_DIR)
-    memes_weekly.to_csv(MEMES_OUT, index=False)
-    print("Saved:", MEMES_OUT)
-    print(memes_weekly.head().to_string(index=False))
+    if os.path.exists(MEMES_OUT):
+        print(f"Loading cached meme activity from {MEMES_OUT}")
+        memes_weekly = pd.read_csv(MEMES_OUT)
+        memes_weekly['week_start'] = pd.to_datetime(memes_weekly['week_start'])
+    else:
+        print("Building memes weekly activity (this can be slow)...")
+        memes_weekly = build_memes_weekly(PRED_IMG_DIR)
+        memes_weekly.to_csv(MEMES_OUT, index=False)
+        print("Saved:", MEMES_OUT)
 
     print("\nJoining into weekly panel and creating lags...")
     panel = pd.merge(nyt_weekly, memes_weekly, on=["company", "week_start"], how="outer")
