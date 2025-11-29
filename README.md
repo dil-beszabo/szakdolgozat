@@ -2,15 +2,15 @@
 
 [TWF Panel regression](twf_estimation_choices.md)
 
-[Time Series Diagrams](lead_lag_analysis_choices.md)
+[Time Series Diagrams](panel_analysis_workflow_choices.md)
 
-[XCorr](lead_lag_analysis_choices.md)
+[XCorr](panel_analysis_workflow_choices.md)
 
-[Event-study CI](lead_lag_analysis_choices.md)
+[Event-study CI](panel_analysis_workflow_choices.md)
 
-[Event − Placebo difference](lead_lag_analysis_choices.md)
+[Event − Placebo difference](panel_analysis_workflow_choices.md)
 
-[Sanity checks](lead_lag_analysis_choices.md)
+[Sanity checks](panel_analysis_workflow_choices.md)
 
 
 
