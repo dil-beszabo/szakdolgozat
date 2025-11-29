@@ -35,16 +35,16 @@ def main():
 
     # Load and aggregate NYT article counts
     nyt = pd.read_csv(NYT_CSV)
-    articles_counts = nyt.groupby("company", as_index=False)["num_articles"].sum()
-    articles_out = os.path.join(FIG_DIR, "company_num_articles.png")
-    _plot_bar(articles_counts, "num_articles", "Total NYT articles per company", articles_out)
+    articles_counts = nyt.groupby("company", as_index=False)["NYT_mention"].sum()
+    articles_out = os.path.join(FIG_DIR, "company_nyt_mentions.png")
+    _plot_bar(articles_counts, "NYT_mention", "Total NYT mentions per company", articles_out)
     print(f"Saved {articles_out}")
 
     # Print quick top-5 summaries
     print("\nTop companies by memes:")
     print(memes_counts.sort_values("num_memes", ascending=False).head(10).to_string(index=False))
-    print("\nTop companies by articles:")
-    print(articles_counts.sort_values("num_articles", ascending=False).head(10).to_string(index=False))
+    print("\nTop companies by NYT mentions:")
+    print(articles_counts.sort_values("NYT_mention", ascending=False).head(10).to_string(index=False))
 
 
 if __name__ == "__main__":

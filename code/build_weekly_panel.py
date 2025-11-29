@@ -184,42 +184,6 @@ def build_nyt_weekly(nyt_dir: str, num_processes: int = None) -> pd.DataFrame:
     grp["non_neutral_share"] = 1.0 - grp["mean_neu"]
     return grp
 
-# ----------------- Memes weekly activity builder ------------- #
-
-def _find_timestamp_column(df: pd.DataFrame) -> str:
-    candidates = ["created_utc", "created_at", "created", "timestamp", "date"]
-    col = next((c for c in candidates if c in df.columns), None)
-    if col:
-        return col
-    raise ValueError("No timestamp column found in predictions CSV.")
-
-
-def _find_path_or_company_columns(df: pd.DataFrame) -> Tuple[str, str]:
-    path_cols = ["path", "filepath", "image_path", "image", "filename"]
-    company_cols = ["company", "brand", "label", "folder"]
-    path_col = next((c for c in path_cols if c in df.columns), None)
-    comp_col = next((c for c in company_cols if c in df.columns), None)
-    return path_col, comp_col
-
-
-def _company_from_path(path: str) -> str:
-    if not isinstance(path, str):
-        return ""
-    # Expect .../prediction_images/<Company>/... or similar
-    parts = re.split(r"[\\/]+", path)
-    # Find the segment right after 'prediction_images'
-    try:
-        idx = [p.lower() for p in parts].index("prediction_images")
-        if idx + 1 < len(parts):
-            return _simple_key(parts[idx + 1])
-    except ValueError:
-        pass
-    # Fallback: take the first directory-looking segment
-    for p in parts:
-        if p and not p.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            return _simple_key(p)
-    return ""
-
 # ---------------- Image + OCR sentiment helpers ------------- #
 
 _clip_model = None
@@ -290,33 +254,23 @@ def _meme_sentiment(row) -> float:
 
 
 def build_memes_weekly(pred_dir: str) -> pd.DataFrame:
-    # Prefer predictions_metadata.csv; fallback to predictions_manifest.csv
-    enriched_meta_path = os.path.join(pred_dir, "enriched_predictions_metadata.csv")
-    meta_path = enriched_meta_path if os.path.exists(enriched_meta_path) else os.path.join(pred_dir, "predictions_metadata.csv")
-    mani_path = os.path.join(pred_dir, "predictions_manifest.csv")
-    csv_path = meta_path if os.path.exists(meta_path) else mani_path
-    df = pd.read_csv(csv_path)
+    reddit_predictions = os.path.join(pred_dir, "enriched_predictions_metadata.csv")
+    df = pd.read_csv(reddit_predictions)
 
     # Compute meme sentiment per-image (clip+ocr averaged)
     print("Scoring meme image sentiment (may take a while on CPU)...")
     df["meme_sentiment"] = df.apply(_meme_sentiment, axis=1)
-    ts_col = _find_timestamp_column(df)
-    path_col, comp_col = _find_path_or_company_columns(df)
+    # Parse timestamp from fixed `created` column (Unix seconds)
+    df["date"] = (
+        pd.to_datetime(df["created"], unit="s", utc=True)
+        .dt.tz_localize(None)
+        .dt.normalize()
+    )
 
-    # Timestamp parse
-    ts = df[ts_col]
-    if np.issubdtype(ts.dtype, np.number):
-        dt = pd.to_datetime(ts, unit="s", utc=True).dt.tz_localize(None)
-    else:
-        dt = pd.to_datetime(ts, errors="coerce", utc=True).dt.tz_localize(None)
-    df["date"] = dt.dt.normalize()
-    # Company
-    if comp_col:
-        df["company"] = df[comp_col].map(_simple_key)
-    elif path_col:
-        df["company"] = df[path_col].map(_company_from_path)
-    else:
-        raise ValueError("No company or path column found in predictions CSV.")
+    # Company comes from the `brand` column. Map to a simple key.
+    if "brand" not in df.columns:
+        raise ValueError("Expected column 'brand' in enriched_predictions_metadata.csv")
+    df["company"] = df["brand"].map(_simple_key)
 
     df = df[~df["company"].isna() & (df["company"] != "")]
     df["week_start"] = (df["date"] - pd.to_timedelta(df["date"].dt.dayofweek, unit="D"))
@@ -415,28 +369,6 @@ if __name__ == "__main__":
     # Add z/relative normalizations on the balanced panel
     print("\nAdding meme normalizations (if any) on balanced panel..")
     panel2 = add_normalizations(panel2)
-
-    # Rename NYT fields for clarity
-    panel2 = panel2.rename(columns={
-        "sentiment_score": "nyt_sentiment",
-        "mean_pos": "nyt_pos_share",
-        "mean_neg": "nyt_neg_share",
-        "mean_neu": "nyt_neu_share",
-        "non_neutral_share": "nyt_non_neutral_share",
-    })
-    # Rename lag columns accordingly
-    lag_rename_map = {}
-    for k in range(1, 5):
-        for old, new in [
-            (f"sentiment_score_L{k}", f"nyt_sentiment_L{k}"),
-            (f"mean_pos_L{k}", f"nyt_pos_share_L{k}"),
-            (f"mean_neg_L{k}", f"nyt_neg_share_L{k}"),
-            (f"non_neutral_share_L{k}", f"nyt_non_neutral_share_L{k}"),
-        ]:
-            if old in panel2.columns:
-                lag_rename_map[old] = new
-    if lag_rename_map:
-        panel2 = panel2.rename(columns=lag_rename_map)
 
     # Save analysis-ready panel
     panel2.to_csv(ANALYSIS_OUT, index=False)
