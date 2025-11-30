@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # ---- Column naming convention (single source of truth) ---- #
 NYT_POS = "mean_pos"
@@ -52,6 +53,88 @@ def plot_xcorr(df: pd.DataFrame, title: str, out_path: str):
     plt.tight_layout()
     plt.savefig(out_path)
     plt.close()
+
+
+def corrmx_nyt(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+    """
+    Correlation matrix for NYT sentiment & intensity variables.
+    """
+    nyt_vars = [
+        "NYT_mention",
+        "mean_pos",
+        "mean_neg",
+        "mean_neu",
+        "sentiment_score",
+        "non_neutral_share",
+    ]
+    
+    cols = [c for c in nyt_vars if c in panel.columns]
+    corr = panel[cols].corr()
+
+    if plot:
+        plt.figure(figsize=(7, 5))
+        sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+        plt.title("NYT Sentiment/Intensity Correlation Matrix")
+        plt.tight_layout()
+        plt.xticks(rotation=45)
+        plt.show()
+
+    return corr
+
+def corrmx_meme(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+    """
+    Correlation matrix for meme-side activity, engagement, and sentiment variables.
+    """
+    meme_vars = [
+        "num_memes",
+        "num_memes_z",
+        "num_memes_rel",
+        "log1p_meme_volume",
+        "meme_engagement",
+        "log1p_meme_engagement",
+        "mean_meme_sentiment",
+    ]
+    
+    cols = [c for c in meme_vars if c in panel.columns]
+    corr = panel[cols].corr()
+
+    if plot:
+        plt.figure(figsize=(7, 5))
+        sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+        plt.title("Meme Activity / Engagement / Sentiment Correlation Matrix")
+        plt.tight_layout()
+        plt.xticks(rotation=45) 
+        plt.show()
+
+    return corr
+
+def corrmx_cross(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+    """
+    Cross-correlation matrix between NYT variables and meme outcomes (same-week).
+    """
+    cross_vars = [
+        "NYT_mention",
+        "sentiment_score",
+        "mean_pos",
+        "mean_neg",
+        "num_memes_z",
+        "num_memes_rel",
+        "log1p_meme_volume",
+        "mean_meme_sentiment",
+    ]
+    
+    cols = [c for c in cross_vars if c in panel.columns]
+    corr = panel[cols].corr()
+
+    if plot:
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+        plt.title("Cross-Domain NYT ↔ Meme Correlation Matrix")
+        plt.tight_layout()
+        plt.xticks(rotation=45) 
+        plt.show()
+
+    return corr
 
 # ---------------- Event study ---------------- #
 
@@ -488,11 +571,9 @@ def build_placebo_panel(panel: pd.DataFrame,
     
     return pd.DataFrame(rows)
 
-import numpy as np
-
 rng = np.random.default_rng(42)
 
-# Helper: compute deciles within company using rank to avoid ties issues
+# Compute deciles within company using rank to avoid ties issues
 def _company_deciles(s: pd.Series, q: int = 10) -> pd.Series:
     r = s.rank(method='first')
     try:

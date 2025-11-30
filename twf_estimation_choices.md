@@ -2,7 +2,7 @@
 
 ### Mit becslünk
 
-- **Kimenetek**: `log1p_meme_volume`, `mean_meme_sentiment`, `log1p_meme_engagement`.
+- **Kimenetek**: `log1p_meme_volume`, `log1p_meme_engagement`.
 - **Fő prediktorok**: `NYT_mention`, és egyes specifikációkban `nyt_sentiment`.
 - **Kontroll (baseline)**: késleltetett `reddit_activity_{t-1}` (heti poszt+komment a dataset egyetlen subredditjében).
 - **Késleltetési szerkezet**: tartalmazzuk az aktuális hetet (k = 0) és a késleltetéseket \(k \in \{1,2,3,4\}\). Robusztaságként kevesebb késleltetéssel (3, 2, 1) is futtatunk.

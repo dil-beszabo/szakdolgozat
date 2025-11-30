@@ -18,7 +18,6 @@
 Korrelációs mátrix
 
 Két scatterplot:
-- NYT_sentiment vs mean_meme_sentiment – hiányzik.
 - NYT_mention vs num_memes (vagy log1p_meme_volume) – hiányzik.
 - 
 Top100 aggregált idősor (meme_volume vs NYT_count)(jelenleg márkánkénti TS-ek vannak: figures/descriptive/timeseries/...).

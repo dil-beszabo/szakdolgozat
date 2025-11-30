@@ -206,21 +206,6 @@ def _get_clip():
     return _clip_model, _clip_proc
 
 
-def _clip_sentiment(path: str) -> Tuple[float, float]:
-    """Return (pos, neg) probs from zero-shot CLIP."""
-    try:
-        img = Image.open(path).convert("RGB")
-    except (FileNotFoundError, UnidentifiedImageError):
-        return 0.5, 0.5  # neutral default
-    model, proc = _get_clip()
-    prompts = ["a negative meme", "a positive meme"]
-    inputs = proc(text=prompts, images=img, return_tensors="pt", padding=True).to(_DEVICE)
-    with torch.no_grad():
-        logits = model(**inputs).logits_per_image.squeeze()
-    probs = F.softmax(logits, dim=0).tolist()
-    return probs[1], probs[0]  # pos, neg
-
-
 def _get_ocr_reader():
     global _ocr_reader
     if _ocr_reader is None:
@@ -246,6 +231,19 @@ def _ocr_finbert_sentiment(path: str) -> Tuple[float, float]:
     scores = {d["label"]: d["score"] for d in outs}
     return scores.get("Positive", 0.0), scores.get("Negative", 0.0)
 
+def _clip_sentiment(path: str) -> Tuple[float, float]:
+    """Return (pos, neg) probs from zero-shot CLIP."""
+    try:
+        img = Image.open(path).convert("RGB")
+    except (FileNotFoundError, UnidentifiedImageError):
+        return 0.5, 0.5  # neutral default
+    model, proc = _get_clip()
+    prompts = ["a negative meme", "a positive meme"]
+    inputs = proc(text=prompts, images=img, return_tensors="pt", padding=True).to(_DEVICE)
+    with torch.no_grad():
+        logits = model(**inputs).logits_per_image.squeeze()
+    probs = F.softmax(logits, dim=0).tolist()
+    return probs[1], probs[0]  # pos, neg
 
 def _meme_sentiment(row) -> float:
     path = os.path.join(PRED_IMG_DIR, row["saved_path"]) if "saved_path" in row else row.get("path", "")

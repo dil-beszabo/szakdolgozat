@@ -19,7 +19,7 @@ A panel a builder modul outputja, amely tartalmazza a NYT-eredetű hangulateleme
 ## Outcome konstrukció
 
 - Fő outcome: vállalatonkénti z‑score a meme volume‑ra, NaN‑aware kezelés a valódi nem‑megfigyelésre:
-  - Ha `num_memes == 0` és (opcionálisan) hiányzik a `mean_meme_sentiment`, az átlagolásnál tekintsük nem megfigyeltnek (NaN).
+  - Ha `num_memes == 0`, az átlagolásnál tekintsük nem megfigyeltnek (NaN).
   - A vállalati átlagot és szórást csak a megfigyelt heteken számoljuk; az értékeket z‑score‑oljuk `num_memes_z_es` néven.
   - Ábra/legacy alias: `num_memes_z = num_memes_z_es`.
 - Robusztasági outcome‑ok:
