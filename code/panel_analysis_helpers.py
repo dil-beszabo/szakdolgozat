@@ -55,7 +55,7 @@ def plot_xcorr(df: pd.DataFrame, title: str, out_path: str):
     plt.close()
 
 
-def corrmx_nyt(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+def corrmx_nyt(panel: pd.DataFrame, plot: bool = True, out_path: str = None) -> pd.DataFrame:
     """
     Correlation matrix for NYT sentiment & intensity variables.
     """
@@ -77,11 +77,15 @@ def corrmx_nyt(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
         plt.title("NYT Sentiment/Intensity Correlation Matrix")
         plt.tight_layout()
         plt.xticks(rotation=45)
-        plt.show()
+        if out_path:
+            plt.savefig(out_path)
+            plt.close()
+        else:
+            plt.show()
 
     return corr
 
-def corrmx_meme(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+def corrmx_meme(panel: pd.DataFrame, plot: bool = True, out_path: str = None) -> pd.DataFrame:
     """
     Correlation matrix for meme-side activity, engagement, and sentiment variables.
     """
@@ -104,11 +108,15 @@ def corrmx_meme(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
         plt.title("Meme Activity / Engagement / Sentiment Correlation Matrix")
         plt.tight_layout()
         plt.xticks(rotation=45) 
-        plt.show()
+        if out_path:
+            plt.savefig(out_path)
+            plt.close()
+        else:
+            plt.show()
 
     return corr
 
-def corrmx_cross(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
+def corrmx_cross(panel: pd.DataFrame, plot: bool = True, out_path: str = None) -> pd.DataFrame:
     """
     Cross-correlation matrix between NYT variables and meme outcomes (same-week).
     """
@@ -132,7 +140,11 @@ def corrmx_cross(panel: pd.DataFrame, plot: bool = True) -> pd.DataFrame:
         plt.title("Cross-Domain NYT ↔ Meme Correlation Matrix")
         plt.tight_layout()
         plt.xticks(rotation=45) 
-        plt.show()
+        if out_path:
+            plt.savefig(out_path)
+            plt.close()
+        else:
+            plt.show()
 
     return corr
 

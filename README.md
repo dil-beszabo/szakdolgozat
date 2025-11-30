@@ -12,10 +12,12 @@
 
 [Sanity checks](panel_analysis_workflow_choices.md)
 
+[Korrelációs mátrix](panel_analysis_workflow_choices.md) 
+
+
 
 
 # Mi hiányzik
-Korrelációs mátrix
 
 Két scatterplot:
 - NYT_mention vs num_memes (vagy log1p_meme_volume) – hiányzik.

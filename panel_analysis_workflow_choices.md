@@ -76,27 +76,31 @@ A panel a builder modul outputja, amely tartalmazza a NYT-eredetű hangulateleme
 - RNG seed placebo kiválasztáshoz: 42.
 - Egyenlő súlyozás az eventek között (nincs brand re‑weighting).
 
-## Fő outputok (útvonalak)
+## Fő outputok 
 - Márka-szintű idősorok:
   - `figures/ts_<brand>_num_articles_vs_num_memes_z.png`
 - Fő event‑study CI eredmények (NaN‑aware z outcome):
   - `figures/event_pos_num_memes_z_ci.png`
   - `figures/event_neg_num_memes_z_ci.png`
-- Alternatív outcome‑ok:
+- Correlation ábrák:
+  - `figures/correlation/xcorr_NYT_mention_vs_num_memes_z.png`
+  - `figures/correlation/meme_matrix.png`
+  - `figures/correlation/nyt_matrix.png`
+  - `figures/correlation/nyt_meme_cross_matrix.png`
+  
+## Alternatív outcome‑ok:
   - `figures/event_pos_num_memes_rel_ci.png`, `figures/event_neg_num_memes_rel_ci.png`
   - `figures/event_pos_log1p_meme_volume_ci.png`, `figures/event_neg_log1p_meme_volume_ci.png`
-  - `figures/event_pos_log1p_meme_engagement_ci.png`, `figures/event_neg_log1p_meme_engagement_ci.png` (ha van engagement)
+  - `figures/event_pos_log1p_meme_engagement_ci.png`, `figures/event_neg_log1p_meme_engagement_ci.png` 
 - Diagnosztikák
   - Non‑overlap, alignment és demeaned diagnosztikák:
-    - `figures/event_pos_num_memes_z_ci_nooverlap.png`, `figures/event_neg_num_memes_z_ci_nooverlap.png`
-    - `figures/event_pos_num_memes_z_ci_shift_m1.png`, `figures/event_pos_num_memes_z_ci_shift_p1.png`
-    - `figures/event_pos_num_memes_z_demeaned_ci.png`, `figures/event_neg_num_memes_z_demeaned_ci.png`
+    - `figures/appendix/event-only/event_pos_num_memes_z_ci_nooverlap.png`, `figures/appendix/event-only/event_neg_num_memes_z_ci_nooverlap.png`
+    - `figures/appendix/alignment-shifts/event_pos_num_memes_z_ci_shift_m1.png`, `figures/appendix/alignment-shifts/event_pos_num_memes_z_ci_shift_p1.png`
+    - `figures/appendix/week-demeaned/event_pos_num_memes_z_demeaned_ci.png`, `figures/appendix/week-demeaned/event_neg_num_memes_z_demeaned_ci.png`
   - Mentions‑spike events (overall és tone‑split):
-    - `figures/event_mentions_num_memes_z_ci.png`
-    - `figures/event_mentions_pos_num_memes_z_ci.png`, `figures/event_mentions_neg_num_memes_z_ci.png`
+    - `figures/appendix/mentions-as-events/event_mentions_num_memes_z_ci.png`
+    - `figures/appendix/mentions-as-events/event_mentions_pos_num_memes_z_ci.png`, `figures/appendix/mentions-as-events/event_mentions_neg_num_memes_z_ci.png`
   - Event − Placebo különbségek (fő robustness):
-    - `figures/results/event_diff/event_pos_num_memes_z_diff_ci.png`
-    - `figures/results/event_diff/event_neg_num_memes_z_diff_ci.png`
-- Cross‑correlation ábra:
-  - `figures/xcorr_NYT_mention_vs_num_memes_z.png`
-  
+    - `figures/appendix/placebo/event_pos_num_memes_z_diff_ci.png`
+    - `figures/appendix/placebo/event_neg_num_memes_z_diff_ci.png`
+
