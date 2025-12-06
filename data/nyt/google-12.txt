@@ -1,0 +1,117 @@
+Title: Can This A.I.-Powered Search Engine Replace Google? It Has for Me.
+
+Publication date: 2024-02-01
+URL: https://www.nytimes.com/2024/02/01/technology/perplexity-search-ai-google.html
+
+Full text: For my entire adult life, whenever I’ve had a question about the world or needed to track down something online, I’ve gone to Google for answers.
+
+____________________________________________________________
+
+Title: Google’s Once Happy Offices Feel the Chill of Layoffs
+
+Publication date: 2024-02-05
+URL: https://www.nytimes.com/2024/02/05/technology/google-layoffs-work-culture.html
+
+Full text: When Diane Hirsh Theriault’s co-worker returned from lunch to Google’s Cambridge, Mass., office one afternoon in October, his work badge couldn’t open a turnstile. He quickly realized it was a sign that he had been laid off.
+
+____________________________________________________________
+
+Title: Russian Tech Giant Reaches $5 Billion Deal to Quit Russia
+
+Publication date: 2024-02-05
+URL: https://www.nytimes.com/2024/02/05/world/europe/yandex-russia-sale.html
+
+Full text: The parent firm of Russia’s most prominent technology company, Yandex, said it has agreed to sell all its assets in the country for about $5 billion, which would be one of the largest corporate exits from Russia since its invasion of Ukraine.
+
+____________________________________________________________
+
+Title: Google Releases Gemini, an A.I.-Driven Chatbot and Voice Assistant
+
+Publication date: 2024-02-08
+URL: https://www.nytimes.com/2024/02/08/technology/google-gemini-ai-app.html
+
+Full text: First, there were talking digital assistants like Siri, Alexa and Google Assistant. Then there were online chatbots like ChatGPT and Google Bard. Now, the two are merging.
+
+____________________________________________________________
+
+Title: Google Joins Effort to Help Spot Content Made With A.I.
+
+Publication date: 2024-02-08
+URL: https://www.nytimes.com/2024/02/08/business/media/google-ai.html
+
+Full text: Google, whose work in artificial intelligence helped make A.I.-generated content far easier to create and spread, now wants to ensure that such content is traceable as well.
+
+____________________________________________________________
+
+Title: Bluesky’s Big Bet, and Are Deals Dead in Silicon Valley?
+
+Publication date: 2024-02-09
+URL: https://www.nytimes.com/2024/02/09/podcasts/hard-fork-bluesky-figma.html
+
+Full text: Bluesky, the Twitter spinoff, is now open for public sign-ups. Can its dreams of decentralization fix social media? We talk with the company’s chief executive, Jay Graber. Then, the New York Times reporter Erin Griffith on how Adobe’s failure to acquire Figma has spooked tech companies and upset Silicon Valley’s start-up pipeline. And finally, updates on ancient scrolls and artificial intelligence, Google’s chatbots, and the fight between record companies and TikTok.
+
+____________________________________________________________
+
+Title: Meet the Woman Who Helped Pay for That R.F.K. Super Bowl Ad
+
+Publication date: 2024-02-13
+URL: https://www.nytimes.com/2024/02/12/us/politics/nicole-shanahan-rfk-super-bowl-ad.html
+
+Full text: Super Bowl ads cost a fortune. So when a group backing the presidential bid of Robert F. Kennedy Jr. ran a 30-second ad for him during Sunday night’s game, the political world took notice.
+
+____________________________________________________________
+
+Title: The State of A.I., and Will Perplexity Beat Google or Destroy the Web?
+
+Publication date: 2024-02-16
+URL: https://www.nytimes.com/2024/02/16/podcasts/sydney-ai-perplexity.html
+
+Full text: A year ago, a chatbot tried to break up Kevin Roose’s marriage. Ever since, chatbots haven’t been the same. We’ll tell you how. Then, we’ll talk through the latest ways the world is adapting to artificial intelligence. And finally, Aravind Srinivas, the chief executive of Perplexity, will discuss his company’s “answer engine,” a challenger to Google’s search engine that could reshape the web as we know it.
+
+____________________________________________________________
+
+Title: In Big Election Year, A.I.’s Architects Move Against Its Misuse
+
+Publication date: 2024-02-16
+URL: https://www.nytimes.com/2024/02/16/technology/ai-elections-defense.html
+
+Full text: Artificial intelligence companies have been at the vanguard of developing the transformative technology. Now they are also racing to set limits on how A.I. is used in a year stacked with major elections around the world.
+
+____________________________________________________________
+
+Title: Google Is Giving Away Some of the A.I. That Powers Chatbots
+
+Publication date: 2024-02-21
+URL: https://www.nytimes.com/2024/02/21/technology/google-open-source-ai.html
+
+Full text: When Meta shared the raw computer code needed to build a chatbot last year, rival companies said Meta was releasing poorly understood and perhaps even dangerous technology into the world.
+
+____________________________________________________________
+
+Title: Google Chatbot’s A.I. Images Put People of Color in Nazi-Era Uniforms
+
+Publication date: 2024-02-22
+URL: https://www.nytimes.com/2024/02/22/technology/google-gemini-german-uniforms.html
+
+Full text: Images showing people of color in German military uniforms from World War II that were created with Google’s Gemini chatbot have amplified concerns that artificial intelligence could add to the internet’s already vast pools of misinformation as the technology struggles with issues around race.
+
+____________________________________________________________
+
+Title: Google DeepMind C.E.O. Demis Hassabis on the Path From Chatbots to A.G.I.
+
+Publication date: 2024-02-23
+URL: https://www.nytimes.com/2024/02/23/podcasts/google-deepmind-demis-hassabis.html
+
+Full text: This week’s episode is a conversation with Demis Hassabis, the head of Google’s artificial intelligence division. We talk about Google’s latest A.I. models, Gemini and Gemma; the existential risks of artificial intelligence; his timelines for artificial general intelligence; and what he thinks the world will look like post-A.G.I.
+
+____________________________________________________________
+
+Title: Shane Gillis Finally Appears on ‘Saturday Night Live’
+
+Publication date: 2024-02-25
+URL: https://www.nytimes.com/2024/02/25/arts/television/saturday-night-live-shane-gillis.html
+
+Full text: Finally given the opportunity to take the stage at NBC’s Studio 8H, the comedian Shane Gillis did not say much about how he’d been fired as a cast member from “Saturday Night Live” before appearing in a single episode.
+
+____________________________________________________________
+

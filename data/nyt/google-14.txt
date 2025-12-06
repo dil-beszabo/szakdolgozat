@@ -1,0 +1,90 @@
+Title: Tech Giants Face a Familiar Uncertainty With Trump
+
+Publication date: 2024-11-07
+URL: https://www.nytimes.com/2024/11/07/technology/trump-apple-amazon-google-meta.html
+
+Full text: At a meeting with Google’s Larry Page, Apple’s Tim Cook and other tech leaders in 2016, President-elect Donald J. Trump told the gathering, “I’m here to help you folks do well.”
+
+____________________________________________________________
+
+Title: Is a New Wave of Digital Nomadism Coming? Interest in Moving Abroad Is on the Rise.
+
+Publication date: 2024-11-08
+URL: https://www.nytimes.com/2024/11/08/travel/digital-nomad-visas-moving-abroad-election.html
+
+Full text: In the wake of the U.S. election, Americans’ interest in digital nomad visas and moving abroad is on the rise.
+
+____________________________________________________________
+
+Title: Is the Biden Administration Coming for Chrome?
+
+Publication date: 2024-11-19
+URL: https://www.nytimes.com/2024/11/19/business/dealbook/biden-chrome-google-antitrust.html
+
+Full text: Before the Biden administration’s antitrust leaders step down, they’re taking their final shots at Big Tech. That will reportedly include an effort to break up Google as a consequence of the Justice Department’s successful competition lawsuit against the company.
+
+____________________________________________________________
+
+Title: How Google Spent 15 Years Creating a Culture of Concealment
+
+Publication date: 2024-11-20
+URL: https://www.nytimes.com/2024/11/20/technology/google-antitrust-employee-messages.html
+
+Full text: In late 2008, as Google faced antitrust scrutiny over an advertising deal with its rival Yahoo and confronted lawsuits involving patent, trademark and copyright claims, its executives sent out a confidential memo.
+
+____________________________________________________________
+
+Title: How to Add Extra Security Layers to Your Phone or Tablet
+
+Publication date: 2024-11-20
+URL: https://www.nytimes.com/2024/11/20/technology/personaltech/security-iphone-android.html
+
+Full text: Losing a smartphone or tablet stuffed with your life’s details can be a nightmare, but your privacy may also be at risk in less obvious situations — like if you leave your unlocked phone unattended or if the children know your tablet’s passcode. While apps for financial or medical matters typically require their own passwords (and Apple’s Photos and Google Photos can hide specific pictures), the latest versions of iOS and Android offer new tools for further shielding sensitive content on your device. Here’s a quick overview.
+
+____________________________________________________________
+
+Title: U.S. Proposes Breakup of Google to Fix Search Monopoly
+
+Publication date: 2024-11-21
+URL: https://www.nytimes.com/2024/11/20/technology/google-search-chrome-doj.html
+
+Full text: The Justice Department and a group of states asked a federal court late Wednesday to force Google to sell Chrome, its popular web browser, a move that could fundamentally alter the $2 trillion company’s business and reshape competition on the internet.
+
+____________________________________________________________
+
+Title: The ‘Rocket Docket’ Judge Who Will Decide the Fate of Google’s Ad Technology
+
+Publication date: 2024-11-25
+URL: https://www.nytimes.com/2024/11/25/technology/google-antitrust-leonie-brinkema.html
+
+Full text: During a trial in a Virginia courtroom in September over Google’s dominance in advertising technology, concepts and phrases like a “second-price auction," “demand-side platforms” and “header bidding” repeatedly came up.
+
+____________________________________________________________
+
+Title: U.S. Says Google Is an Ad Tech Monopolist, in Closing Arguments
+
+Publication date: 2024-11-25
+URL: https://www.nytimes.com/2024/11/25/technology/google-advertising-monopoly.html
+
+Full text: Lawyers for the United States on Monday said that Google had created a monopoly with its services to place ads online, closing out an antitrust trial over the company’s dominance in advertising technology that could add to the Silicon Valley giant’s mounting woes.
+
+____________________________________________________________
+
+Title: Breaking Up Google Would Be a Big Mistake
+
+Publication date: 2024-11-26
+URL: https://www.nytimes.com/2024/11/26/opinion/google-chrome-antitrust.html
+
+Full text: There’s no question that Google dominates the world of internet search. But in attempting to open up this critical industry to more competition, the government is pursuing a cure worse than the disease. If the government is successful at breaking up Google, history tells us that consumers and many enterprises tied to our vast and flourishing internet may ultimately pay a price.
+
+____________________________________________________________
+
+Title: Canada Accuses Google of Creating an Ad Tech Monopoly
+
+Publication date: 2024-11-29
+URL: https://www.nytimes.com/2024/11/28/world/canada/google-complaint-ad-monopoly.html
+
+Full text: Canada’s competition authority on Thursday accused Google of abusing its tools for buying and selling online advertising to create a monopoly, and filed a complaint seeking to force the company to sell two of its main advertising technology services.
+
+____________________________________________________________
+

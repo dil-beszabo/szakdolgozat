@@ -30,7 +30,7 @@ from process_nyt_articles import (
     preprocess_article_text,
     split_articles,
 )
-from lead_lag_analysis import add_normalizations
+from panel_analysis_helpers import add_normalizations
 
 # -------------------------- Config -------------------------- #
 REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
@@ -117,53 +117,79 @@ def _score_text_for_company(text: str, company_key: str) -> Dict[str, float]:
     }
 
 
-def _process_nyt_file_for_sentiment(filepath: str) -> List[Dict[str, float]]:
-    """Worker: parse a single NYT file into per-article sentiment rows for that company."""
-    # Init FinBERT per worker process
+def _process_nyt_company_files(args: Tuple[str, List[str]]) -> List[Dict[str, float]]:
+    """Parse *all* NYT files for a single company and return per-article sentiment rows.
+
+    This replaces the previous file-level worker so that brands with multiple text
+    files (e.g. ``amazon-1.txt``, ``amazon-2.txt``) are handled together in one
+    process. That guarantees that publication counts aggregate correctly and we
+    avoid spinning up FinBERT for every single small file.
+    """
+    company_key, filepaths = args
+
+    # Init FinBERT once per worker process
     clf = get_finbert()
 
-    # Brand key from filename; keep inner hyphens, drop trailing -<digits>
-    base = os.path.splitext(os.path.basename(filepath))[0]
-    base = re.sub(r"-\d+$", "", base)
-    company_key = _simple_key(base)
-    company_article_probs = []
+    company_article_probs: List[Dict[str, float]] = []
 
-    with open(filepath, "r", encoding="utf-8") as f:
-        raw = f.read()
-    
-    for block in split_articles(raw):
-        lines = [l.strip() for l in block.splitlines() if l.strip()]
-        title, body = _extract_title_and_body(lines)
-        pub_date = _parse_pub_date(lines)
-        text = f"{title} {body}".strip()
-        if not text or pub_date is None:
-            continue
+    for filepath in filepaths:
+        with open(filepath, "r", encoding="utf-8") as f:
+            raw = f.read()
 
-        probs = _score_text_for_company(text, company_key)
-        company_article_probs.append({
-            "company": company_key,
-            "date": pd.to_datetime(pub_date).normalize(),
-            "pos": probs["pos"],
-            "neu": probs["neu"],
-            "neg": probs["neg"],
-        })
+        for block in split_articles(raw):
+            lines = [l.strip() for l in block.splitlines() if l.strip()]
+            title, body = _extract_title_and_body(lines)
+            pub_date = _parse_pub_date(lines)
+            text = f"{title} {body}".strip()
+
+            if not text or pub_date is None:
+                continue
+
+            probs = _score_text_for_company(text, company_key)
+            company_article_probs.append(
+                {
+                    "company": company_key,
+                    "date": pd.to_datetime(pub_date).normalize(),
+                    "pos": probs["pos"],
+                    "neu": probs["neu"],
+                    "neg": probs["neg"],
+                }
+            )
 
     return company_article_probs
 
 
-def build_nyt_weekly(nyt_dir: str, num_processes: int = None) -> pd.DataFrame:
-    """Parallel-parse NYT files and aggregate to weekly per company."""
-    nyt_files = sorted(
-        os.path.join(nyt_dir, f) for f in os.listdir(nyt_dir) if f.endswith(".txt")
-    )
-    
+def build_nyt_weekly(nyt_dir: str, num_processes: int | None = None) -> pd.DataFrame:
+    """Parse NYT article text files and aggregate to weekly sentiment per company.
+
+    The function now groups files by company (based on filename stem minus any
+    trailing ``-<digits>``) to ensure that *all* articles for a brand are
+    aggregated together even when the download split output into multiple
+    files.
+    """
+
+    # Discover files and map to brand key
+    all_files = [os.path.join(nyt_dir, f) for f in os.listdir(nyt_dir) if f.endswith(".txt")]
+    grouped: Dict[str, List[str]] = {}
+    for fp in all_files:
+        base = os.path.splitext(os.path.basename(fp))[0]
+        base = re.sub(r"-\d+$", "", base)  # drop trailing -N
+        company_key = _simple_key(base)
+        grouped.setdefault(company_key, []).append(fp)
+
     if num_processes is None:
         num_processes = os.cpu_count() or 1
-    print(f"Processing {len(nyt_files)} NYT files in parallel using {num_processes} processes...")
+
+    print(
+        f"Processing NYT sentiment for {len(grouped)} companies "
+        f"({len(all_files)} raw txt files) using {num_processes} processes..."
+    )
+
+    tasks = [(ckey, paths) for ckey, paths in grouped.items()]
 
     with multiprocessing.Pool(processes=num_processes) as pool:
-        results_lists = pool.map(_process_nyt_file_for_sentiment, nyt_files)
-    
+        results_lists = pool.map(_process_nyt_company_files, tasks)
+
     rows = [row for lst in results_lists for row in lst]
 
     if not rows:
@@ -307,18 +333,18 @@ def make_lags(panel: pd.DataFrame, by: str, date_col: str, cols: List[str], max_
 
 if __name__ == "__main__":
     # Check if intermediates exist
-    if os.path.exists(NYT_OUT):
-        print(f"Loading cached NYT sentiment from {NYT_OUT}")
-        nyt_weekly = pd.read_csv(NYT_OUT)
-        nyt_weekly['week_start'] = pd.to_datetime(nyt_weekly['week_start'])
-    else:
-        print("Building NYT weekly sentiment...")
-        nyt_weekly = build_nyt_weekly(NYT_DIR, num_processes=multiprocessing.cpu_count())
-        nyt_weekly.to_csv(NYT_OUT, index=False)
-        print("Saved:", NYT_OUT)
+    # if os.path.exists(NYT_OUT):
+    #     print(f"Loading cached NYT sentiment from {NYT_OUT}");
+    #     nyt_weekly = pd.read_csv(NYT_OUT)
+    #     nyt_weekly['week_start'] = pd.to_datetime(nyt_weekly['week_start'])
+    # else:
+    print("Building NYT weekly sentiment...")
+    nyt_weekly = build_nyt_weekly(NYT_DIR, num_processes=multiprocessing.cpu_count())
+    nyt_weekly.to_csv(NYT_OUT, index=False)
+    print("Saved:", NYT_OUT)
 
     if os.path.exists(MEMES_OUT):
-        print(f"Loading cached meme activity from {MEMES_OUT}")
+        print(f"Loading  d meme activity from {MEMES_OUT}")
         memes_weekly = pd.read_csv(MEMES_OUT)
         memes_weekly['week_start'] = pd.to_datetime(memes_weekly['week_start'])
     else:

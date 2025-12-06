@@ -1,6 +1,0 @@
-requirement,rows_ok,share_ok,variables_required
-current_only,3942,0.44272237196765496,"NYT_mention,nyt_sentiment"
-current+L1,3126,0.35107816711590295,"NYT_mention,nyt_sentiment,NYT_mention_L1,nyt_sentiment_L1"
-current+L1..L2,2653,0.2979559748427673,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,nyt_sentiment_L1,nyt_sentiment_L2"
-current+L1..L3,2327,0.2613432165318958,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3"
-current+L1..L4,2092,0.23495058400718777,"NYT_mention,nyt_sentiment,NYT_mention_L1,NYT_mention_L2,NYT_mention_L3,NYT_mention_L4,nyt_sentiment_L1,nyt_sentiment_L2,nyt_sentiment_L3,nyt_sentiment_L4"

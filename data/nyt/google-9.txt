@@ -1,0 +1,162 @@
+Title: What’s Next for Google’s Search Monopoly
+
+Publication date: 2024-12-03
+URL: https://www.nytimes.com/2024/12/03/technology/google-search-antitrust-judge.html
+
+Full text: The U.S. government asked a federal judge last month to force Google to sell Chrome, the world’s most popular web browser.
+
+____________________________________________________________
+
+Title: Google Worried Israeli Contract Could Enable Human Rights Violations
+
+Publication date: 2024-12-03
+URL: https://www.nytimes.com/2024/12/03/technology/google-israel-contract-project-nimbus.html
+
+Full text: In May 2021, Google announced it had agreed to participate in a $1.2 billion cloud computing contract with the Israeli government and military, saying it was “delighted to have been chosen to help digitally transform” the country.
+
+____________________________________________________________
+
+Title: Google Introduces A.I. Agent That Aces 15-Day Weather Forecasts
+
+Publication date: 2024-12-04
+URL: https://www.nytimes.com/2024/12/04/science/google-ai-weather-forecast.html
+
+Full text: In the 1960s, weather scientists found that the chaotic nature of Earth’s atmosphere would put a limit on how far into the future their forecasts might peer. Two weeks seemed to be the limit. Still, by the early 2000s, the great difficulty of the undertaking kept reliable forecasts restricted to about a week.
+
+____________________________________________________________
+
+Title: Trump to Nominate Gail Slater to Lead Justice Department’s Antitrust Efforts
+
+Publication date: 2024-12-04
+URL: https://www.nytimes.com/2024/12/04/us/politics/trump-gail-slater-antitrust-justice-department.html
+
+Full text: Follow the latest news on Trump’s transition and staff picks.
+
+____________________________________________________________
+
+Title: Google C.E.O. Comments On Landmark Monopoly Ruling
+
+Publication date: 2024-12-04
+URL: https://www.nytimes.com/video/business/dealbook/100000009859994/dealbook-google-monopoly.html
+
+Full text: Andrew Ross Sorkin, the DealBook editor-at-large, asked the C.E.O. of Google, Sundar Pichai, about the August antitrust ruling that labeled Google as an illegal monopoly.
+
+____________________________________________________________
+
+Title: Sundar Pichai Hits Back at Criticism of Company’s A.I. Leadership
+
+Publication date: 2024-12-04
+URL: https://www.nytimes.com/2024/12/04/business/dealbook/google-ai-sundar-pichai.html
+
+Full text: Sundar Pichai, Google’s chief executive, projected a rosy image of his company’s leadership in artificial intelligence, rejecting criticism from rivals and downplaying antitrust fights that could force the technology giant to split itself up.
+
+____________________________________________________________
+
+Title: On These Apps, the Dark Promise of Mothers Sexually Abusing Children
+
+Publication date: 2024-12-07
+URL: https://www.nytimes.com/2024/12/07/us/child-abuse-apple-google-apps.html
+
+Full text: The promotional photo showed a mother affectionately hugging and kissing her daughter. The girl, around 8 years old, smiled into the camera.
+
+____________________________________________________________
+
+Title: Quantum Computing Inches Closer to Reality After Another Google Breakthrough
+
+Publication date: 2024-12-09
+URL: https://www.nytimes.com/2024/12/09/technology/google-quantum-computing.html
+
+Full text: In 2019, a team of Google researchers said they had built a machine capable of performing tasks that were not possible with traditional supercomputers. They described this machine, called a quantum computer, as a turning point in the evolution of information technology.
+
+____________________________________________________________
+
+Title: C.E.O. Shooting Suspect Arrested, and Netanyahu’s Corruption Trial
+
+Publication date: 2024-12-10
+URL: https://www.nytimes.com/2024/12/10/podcasts/suspect-unitedhealthcare-shooting.html
+
+Full text: On Today’s Episode:
+
+____________________________________________________________
+
+Title: Google Unveils A.I. Agent That Can Use Websites on Its Own
+
+Publication date: 2024-12-11
+URL: https://www.nytimes.com/2024/12/11/technology/google-ai-agent-gemini.html
+
+Full text: Today, chatbots can answer questions, write poems and generate images. In the future, they could also autonomously perform tasks like online shopping and work with tools like spreadsheets.
+
+____________________________________________________________
+
+Title: TikTok’s Last Stand, Google’s Quantum Breakthrough and the Cult of Claude
+
+Publication date: 2024-12-13
+URL: https://www.nytimes.com/2024/12/13/podcasts/hardfork-tiktok-quantum-claude.html
+
+Full text: Last Friday, a panel of federal judges denied TikTok’s petition to overturn the law that could force the ban of the app in the United States. We walk through the judges reasoning and explain why TikTok’s First Amendment argument was unsuccessful. Then, Julian Kelly, the director of quantum hardware at Google Quantum AI, explains how close we are to quantum computers that can solve practical problems. Finally, we talk about a new sentiment sweeping Silicon Valley: affection for the chatbot Claude.
+
+____________________________________________________________
+
+Title: Google’s Sundar Pichai on Antitrust, Trump and A.I.
+
+Publication date: 2024-12-15
+URL: https://www.nytimes.com/2024/12/15/business/dealbook/sundar-pichai-dealbook.html
+
+Full text: Google got a head start in the artificial intelligence race, and at the DealBook Summit on Dec. 4, its chief executive, Sundar Pichai, snapped back at suggestions that it should be more competitive considering its vast resources.
+
+____________________________________________________________
+
+Title: How OpenAI Hopes to Sever Its Nonprofit Roots
+
+Publication date: 2024-12-17
+URL: https://www.nytimes.com/2024/12/17/technology/openai-nonprofit-control.html
+
+Full text: Last fall, the nonprofit that controls OpenAI tried to fire the company’s high-profile leader, Sam Altman. It failed.
+
+____________________________________________________________
+
+Title: Google Street View Captures a Man Loading a Bag Into a Trunk. Arrests Follow.
+
+Publication date: 2024-12-18
+URL: https://www.nytimes.com/2024/12/18/world/europe/google-maps-spain-arrests.html
+
+Full text: It was a routine image picked up by Google Street View: a man loading a white bag into the trunk of a car.
+
+____________________________________________________________
+
+Title: Is the Tech Industry Already on the Cusp of an A.I. Slowdown?
+
+Publication date: 2024-12-19
+URL: https://www.nytimes.com/2024/12/19/technology/artificial-intelligence-data-openai-google.html
+
+Full text: Demis Hassabis, one of the most influential artificial intelligence experts in the world, has a warning for the rest of the tech industry: Don’t expect chatbots to continue to improve as quickly as they have over the last few years.
+
+____________________________________________________________
+
+Title: Sundar Pichai on A.I., Regulation and What’s Next for Google
+
+Publication date: 2024-12-20
+URL: https://www.nytimes.com/2024/12/20/podcasts/19dealbook-pichai-google.html
+
+Full text: DealBook Summit includes conversations with business and policy leaders at the heart of today’s major stories, recorded live at the annual DealBook Summit event in New York City.
+
+____________________________________________________________
+
+Title: Google Proposes Fix to Solve Search Monopoly
+
+Publication date: 2024-12-21
+URL: https://www.nytimes.com/2024/12/20/technology/google-antitrust-search-remedies.html
+
+Full text: Google said on Friday what it thought should change to address a ruling that it had illegally maintained a monopoly over online search: not much.
+
+____________________________________________________________
+
+Title: What’s Next for Google’s Search Monopoly
+
+Publication date: 2024-12-21
+URL: https://www.nytimes.com/2024/12/20/technology/google-antitrust-case-chrome.html
+
+Full text: Google said on Friday that a federal judge needed to do very little to fix its search monopoly.
+
+____________________________________________________________
+

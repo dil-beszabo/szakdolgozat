@@ -1,0 +1,171 @@
+Title: Hey, A.I. Let’s Talk
+
+Publication date: 2024-05-01
+URL: https://www.nytimes.com/2024/05/01/technology/personaltech/ai-voice-assistants.html
+
+Full text: A pair of glasses from Meta shoots a picture when you say, “Hey, Meta, take a photo.” A miniature computer that clips to your shirt, the Ai Pin, translates foreign languages into your native tongue. An artificially intelligent screen features a virtual assistant that you talk to through a microphone.
+
+____________________________________________________________
+
+Title: The Judge Deciding Google’s Fate
+
+Publication date: 2024-05-02
+URL: https://www.nytimes.com/2024/05/02/business/judge-mehta-google-antitrust.html
+
+Full text: One of Amit P. Mehta’s first cases after becoming a federal judge in late 2014 proved to be a crash course in antitrust.
+
+____________________________________________________________
+
+Title: Strongest U.S. Challenge to Big Tech’s Power Nears Climax in Google Trial
+
+Publication date: 2024-05-02
+URL: https://www.nytimes.com/2024/05/02/technology/google-antitrust-trial-closing-arguments.html
+
+Full text: The biggest U.S. challenge so far to the vast power of today’s tech giants is nearing its conclusion.
+
+____________________________________________________________
+
+Title: Judge Grills U.S. and Google on Antitrust Claims
+
+Publication date: 2024-05-02
+URL: https://www.nytimes.com/2024/05/02/technology/judge-mehta-google-antitrust-closing-arguments.html
+
+Full text: The judge overseeing a landmark U.S. antitrust challenge to Google tried to poke holes in both sides’ cases during closing arguments Thursday as he weighed a ruling that could reshape the technology industry.
+
+____________________________________________________________
+
+Title: Google Employees Tune Out Antitrust Threat as Trial Comes to a Head
+
+Publication date: 2024-05-03
+URL: https://www.nytimes.com/2024/05/03/technology/google-employees-antitrust-trial.html
+
+Full text: On Tuesday, Google’s employees gathered for an all-hands meeting named T.G.I.F. These companywide meetings are rarely held on Fridays these days, but the name has stuck.
+
+____________________________________________________________
+
+Title: U.S. Antitrust Case Against Google Is Just the Start
+
+Publication date: 2024-05-03
+URL: https://www.nytimes.com/2024/05/03/technology/google-apple-amazon-meta-antitrust.html
+
+Full text: The U.S. government’s landmark antitrust trial against Google’s search business is nearing its conclusion. But the parade of major federal cases challenging Big Tech’s power is just getting going.
+
+____________________________________________________________
+
+Title: Final Arguments in Google Antitrust Trial Conclude, Setting Up Landmark Ruling
+
+Publication date: 2024-05-03
+URL: https://www.nytimes.com/2024/05/03/technology/google-antitrust-trial.html
+
+Full text: A landmark antitrust trial against Google concluded on Friday after a federal judge heard final arguments, setting the stage for a ruling that could fundamentally shift the tech industry’s power.
+
+____________________________________________________________
+
+Title: Hong Kong Court Bans Democracy Song, Calling It a ‘Weapon’
+
+Publication date: 2024-05-08
+URL: https://www.nytimes.com/2024/05/08/business/glory-to-hong-kong-court-ruling.html
+
+Full text: A Hong Kong court on Wednesday granted a government request to ban a popular pro-democracy anthem, raising further concerns about free speech in the city.
+
+____________________________________________________________
+
+Title: Google Unveils A.I. for Predicting Behavior of Human Molecules
+
+Publication date: 2024-05-08
+URL: https://www.nytimes.com/2024/05/08/technology/google-ai-molecules-alphafold3.html
+
+Full text: Artificial intelligence is giving machines the power to generate videos, write computer code and even carry on a conversation.
+
+____________________________________________________________
+
+Title: Google Takes the Next Step in Its A.I. Evolution
+
+Publication date: 2024-05-14
+URL: https://www.nytimes.com/2024/05/14/technology/google-artificial-intelligence-products.html
+
+Full text: Last May, Sundar Pichai, Google’s chief executive, said the company would use artificial intelligence to reimagine all of its products.
+
+____________________________________________________________
+
+Title: Can Google Give A.I. Answers Without Breaking the Web?
+
+Publication date: 2024-05-14
+URL: https://www.nytimes.com/2024/05/14/technology/google-ai-answers.html
+
+Full text: For the past year and a half since ChatGPT was released, a scary question has hovered over the heads of major online publishers: What if Google decides to overhaul its core search engine to feature generative artificial intelligence more prominently — and breaks our business in the process?
+
+____________________________________________________________
+
+Title: YouTube Blocks Access to Protest Anthem in Hong Kong
+
+Publication date: 2024-05-15
+URL: https://www.nytimes.com/2024/05/14/business/youtube-glory-to-hong-kong.html
+
+Full text: YouTube said on Tuesday that it would comply with a court order to block users in Hong Kong from viewing a popular democracy anthem, raising concerns about free speech and highlighting the increasing fraught environment for tech companies operating in the Chinese territory.
+
+____________________________________________________________
+
+Title: Smartphones Can Now Last 7 Years. Here’s How to Keep Them Working.
+
+Publication date: 2024-05-15
+URL: https://www.nytimes.com/2024/05/15/technology/personaltech/smartphones-software-update-ios-android.html
+
+Full text: Every smartphone has an expiration date. That day arrives when the software updates stop coming and you start missing out on new apps and security protections. With most phones, this used to happen after about only three years.
+
+____________________________________________________________
+
+Title: OpenAI’s Flirty New Assistant, Google Guts the Web and We Play HatGPT
+
+Publication date: 2024-05-17
+URL: https://www.nytimes.com/2024/05/17/podcasts/hardfork-gpt4o-ai-overviews.html
+
+Full text: This week, OpenAI unveiled GPT-4o, its newest A.I. model. It has an uncannily emotive voice that everybody is talking about. Then, we break down the biggest announcements from Google IO, including the launch of A.I. overviews, a major change to search that threatens the way the entire web functions. And finally, Kevin and Casey discuss the weirdest headlines from the week in another round of HatGPT.
+
+____________________________________________________________
+
+Title: A Running Mate’s History: $1 Billion, Cocaine, a Fling With Elon Musk
+
+Publication date: 2024-05-22
+URL: https://www.nytimes.com/2024/05/22/technology/nicole-shanahan-rfk-jr-vp.html
+
+Full text: When Robert F. Kennedy Jr. was considering potential running mates for his presidential run, his shortlist was initially topped by two well-known men with unusual résumés: Aaron Rodgers, the N.F.L. quarterback and frequent purveyor of conspiracy theories, and Jesse Ventura, the former governor of Minnesota and professional wrestler known as “The Body.”
+
+____________________________________________________________
+
+Title: Google’s A.I. Search Errors Cause a Furor Online
+
+Publication date: 2024-05-24
+URL: https://www.nytimes.com/2024/05/24/technology/google-ai-overview-search.html
+
+Full text: Last week, Google unveiled its biggest change to search in years, showcasing new artificial intelligence capabilities that answer people’s questions in the company’s attempt to catch up to rivals Microsoft and OpenAI.
+
+____________________________________________________________
+
+Title: Google Is Using A.I. to Answer Your Health Questions. Should You Trust It?
+
+Publication date: 2024-05-31
+URL: https://www.nytimes.com/2024/05/31/well/live/google-ai-health-information.html
+
+Full text: Do you have a headache or is it a sinus infection? What does a stress fracture feel like? Should you be worried about the pain in your chest? If you Google those questions now, the answers may be written by artificial intelligence.
+
+____________________________________________________________
+
+Title: Google Eats Rocks, a Win for A.I. Interpretability and Safety Vibe Check
+
+Publication date: 2024-05-31
+URL: https://www.nytimes.com/2024/05/31/podcasts/hardfork-google-overviews-anthropic-interpretability.html
+
+Full text: This week, Google found itself in more turmoil, this time over its new AI Overviews feature and a trove of leaked internal documents. Then Josh Batson, a researcher at the A.I. startup Anthropic, joins us to explain how an experiment that made the chatbot Claude obsessed with the Golden Gate Bridge represents a major breakthrough in understanding how large language models work. And finally, we take a look at recent developments in A.I. safety, after Casey’s early access to OpenAI’s new souped-up voice assistant was taken away for safety reasons.
+
+____________________________________________________________
+
+Title: Building a Tractor-Trailer Fit for ‘Furiosa’
+
+Publication date: 2024-05-31
+URL: https://www.nytimes.com/2024/05/31/movies/mad-max-furiosa-war-rig.html
+
+Full text: Chrome and polished steel have some great qualities. They look sleek, sexy and powerful. Onscreen, they really pop.
+
+____________________________________________________________
+

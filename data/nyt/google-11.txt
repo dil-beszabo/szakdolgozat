@@ -1,0 +1,198 @@
+Title: The Zoom Election, Google DeepMind’s Math Olympiad and HatGPT Olympics Edition
+
+Publication date: 2024-08-02
+URL: https://www.nytimes.com/2024/08/02/podcasts/hard-fork-zoom-election-deepmind-math-hatgpt-olympics.html
+
+Full text: This week, with hundreds of thousands of people joining online political rallies for Kamala Harris, we discuss whether 2024 is suddenly becoming the Zoom election, and what that means for both parties’ political organizing. Then, Pushmeet Kohli, a computer scientist at Google DeepMind, joins us for a conversation about how his team’s new A.I. models just hit a silver medal score on the International Mathematical Olympiad exam. And finally, it’s time for a new round of HatGPT! This time, it’s a special Olympics tech edition.
+
+____________________________________________________________
+
+Title: ‘Google Is a Monopolist,’ Judge Rules in Landmark Antitrust Case
+
+Publication date: 2024-08-05
+URL: https://www.nytimes.com/2024/08/05/technology/google-antitrust-ruling.html
+
+Full text: Google acted illegally to maintain a monopoly in online search, a federal judge ruled on Monday, a landmark decision that strikes at the power of tech giants in the modern internet era and that may fundamentally alter the way they do business.
+
+____________________________________________________________
+
+Title: U.S. et al. v. Google: Read the Ruling
+
+Publication date: 2024-08-05
+URL: https://www.nytimes.com/interactive/2024/08/05/technology/google-antitrust-ruling.html
+
+Full text: Google acted illegally to maintain a monopoly in online search, a federal judge ruled on Monday. The landmark decision strikes at the power of tech giants in the modern internet era and may fundamentally alter the way they do business.
+
+____________________________________________________________
+
+Title: After Google Antitrust Ruling, Here’s Where Other Big Tech Cases Stand
+
+Publication date: 2024-08-05
+URL: https://www.nytimes.com/2024/08/05/technology/antitrust-google-amazon-apple-meta.html
+
+Full text: The U.S. government’s landmark antitrust trial against Google’s search business concluded on Monday with a federal judge’s ruling that the company acted illegally to maintain a monopoly. But the parade of major federal cases challenging the power of the tech giants is just getting going.
+
+____________________________________________________________
+
+Title: Stocks Tumbled Over Fears of a U.S. Economic Slowdown
+
+Publication date: 2024-08-05
+URL: https://www.nytimes.com/2024/08/05/briefing/stocks-tumbled-over-fears-of-a-us-economic-slowdown.html
+
+Full text: A wave of anxiety rippled through financial markets today, with stocks falling in the U.S. and around the world as investors zeroed in on signs of a slowing American economy.
+
+____________________________________________________________
+
+Title: How the Google Antitrust Ruling May Influence Tech Competition
+
+Publication date: 2024-08-06
+URL: https://www.nytimes.com/2024/08/06/technology/google-microsoft-antitrust-cases.html
+
+Full text: In 2000, a ruling in a U.S. antitrust case against Microsoft helped set the rules of competition for the digital giant of its day.
+
+____________________________________________________________
+
+Title: How Google’s Antitrust Defeat Might Transform Big Tech
+
+Publication date: 2024-08-06
+URL: https://www.nytimes.com/2024/08/06/business/dealbook/google-antitrust-tech.html
+
+Full text: The federal court ruling that Google had abused its monopoly in online search threatens to disrupt one of the most valuable businesses in modern history, and Big Tech more broadly.
+
+____________________________________________________________
+
+Title: The New A.I. Deal: Buy Everything but the Company
+
+Publication date: 2024-08-08
+URL: https://www.nytimes.com/2024/08/08/technology/ai-start-ups-google-microsoft-amazon.html
+
+Full text: In 2022, Noam Shazeer and Daniel De Freitas left their jobs developing artificial intelligence at Google. They said the tech giant moved too slowly. So they created Character.AI, a chatbot start-up, and raised nearly $200 million.
+
+____________________________________________________________
+
+Title: Google’s Monopoly Money + Is the A.I. Bubble Popping? + The Hot-Mess Express
+
+Publication date: 2024-08-09
+URL: https://www.nytimes.com/2024/08/09/podcasts/hardfork-google-antitrust-ai-bubble.html
+
+Full text: This week, a federal judge ruled that Google acted illegally to maintain a monopoly in online search. David McCabe, a New York Times reporter, joins to discuss what happens next. Then, are we in an A.I. bubble? We weigh in on the wild market swings that started the week and consider the argument that A.I. is overhyped. And finally, it’s time for our new segment: We bat around some of the weirdest recent tech drama — including a MrBeast competition that went awry and a founder who dropped a diss track aimed at a rival. All aboard the Hot-Mess Express.
+
+____________________________________________________________
+
+Title: Susan Wojcicki, a Pivotal Chief of YouTube, Dies at 56
+
+Publication date: 2024-08-10
+URL: https://www.nytimes.com/2024/08/10/business/susan-wojcicki-dead.html
+
+Full text: Susan Wojcicki, who helped turn Google from a start-up in her garage into an internet juggernaut, and who became one of Silicon Valley’s most prominent female executives with her leadership of YouTube, died on Friday. She was 56.
+
+____________________________________________________________
+
+Title: What Should We Do About Google?
+
+Publication date: 2024-08-13
+URL: https://www.nytimes.com/2024/08/13/opinion/google-antitrust-remedy.html
+
+Full text: A federal judge held last week that Google has a monopoly on online search and has been illegally defending that monopoly for years. The verdict is important and correct, yet it leaves open an important question: What should the remedy be?
+
+____________________________________________________________
+
+Title: Google Debuts A.I.-Powered Phones in Latest Attempt to Best the iPhone
+
+Publication date: 2024-08-13
+URL: https://www.nytimes.com/2024/08/13/technology/google-pixel-9.html
+
+Full text: When Google released its first Android smartphone in 2008, the company’s founders slid onstage in roller skates. One of them, Larry Page, said the device was as advanced as a computer had been a few years before.
+
+____________________________________________________________
+
+Title: U.S. Said to Consider a Breakup of Google to Address Search Monopoly
+
+Publication date: 2024-08-13
+URL: https://www.nytimes.com/2024/08/13/technology/google-monopoly-antitrust-justice-department.html
+
+Full text: Google was found last week to have violated antitrust law by illegally maintaining a monopoly in internet search. Now discussions over how to fix those violations have begun.
+
+____________________________________________________________
+
+Title: How One Tech Monopoly Paved the Way for Another
+
+Publication date: 2024-08-14
+URL: https://www.nytimes.com/2024/08/14/podcasts/the-daily/microsoft-google-antitrust.html
+
+Full text: In a landmark antitrust ruling against Google last week, another case was at the heart of the story — one from the 1990s.
+
+____________________________________________________________
+
+Title: Google’s Stock Falls as the Government Weighs Breaking Up the Company
+
+Publication date: 2024-08-14
+URL: https://www.nytimes.com/2024/08/14/business/dealbook/google-stock-antitrust-break-up.html
+
+Full text: Shares in Alphabet, Google’s parent company, were down more than 2.5 percent in early trading on Wednesday morning on news that the Justice Department is considering breaking up the technology giant for maintaining an illegal search monopoly.
+
+____________________________________________________________
+
+Title: Google Pixel Documents a Fashion House in Its 20th Year
+
+Publication date: 2024-08-14
+URL: https://brandedplaylist.nytimes.com/video/embedded/t-brand/100000009621774/google-pixel-documents-a-fashion-house-in-its-20th-year.html
+
+Full text: Fashion designer Phillip Lim and photographer Andy Jackson used Google Pixel 9 Pro and its AI-powered editing features in a portrait session dedicated to the women who inspired Lim’s career.
+
+____________________________________________________________
+
+Title: Google Joins $250 Million Deal to Support Newsrooms in California
+
+Publication date: 2024-08-22
+URL: https://www.nytimes.com/2024/08/21/business/google-california-news-funding.html
+
+Full text: Google, a news industry trade group and key California lawmakers announced a first-in-the-nation agreement on Wednesday aimed at shoring up newsrooms in the state with as much as $250 million.
+
+____________________________________________________________
+
+Title: Hungry for Clean Energy, Facebook Looks to a New Type of Geothermal
+
+Publication date: 2024-08-26
+URL: https://www.nytimes.com/2024/08/26/climate/meta-facebook-geothermal-fracking-energy.html
+
+Full text: Big tech companies across the United States are struggling to find enough clean energy to power all the data centers they plan to build.
+
+____________________________________________________________
+
+Title: Breaking Up Google Isn’t Nearly Enough
+
+Publication date: 2024-08-27
+URL: https://www.nytimes.com/2024/08/27/opinion/google-monopoly-ruling-break-up.html
+
+Full text: Have you looked for a recipe online? If so, you probably found yourself on a blinking hellscape of a web page that was as long as an epic poem, but without any of the insight. First, you get the hokey story about the recipe’s origin. Then there are the videos. The irrelevant ads. The photos of each ingredient. The thousands of words are divided up into sections with headlines like, “Chia Seed Pudding Troubleshooting.”
+
+____________________________________________________________
+
+Title: Google Says It Fixed Image Generator That Failed to Depict White People
+
+Publication date: 2024-08-28
+URL: https://www.nytimes.com/2024/08/28/technology/google-gemini-ai-image-generator.html
+
+Full text: In February, Google faced a backlash from users who realized its A.I. chatbot Gemini was unable to reliably create images of white people. To quell the controversy, the company shut down Gemini’s ability to depict any human.
+
+____________________________________________________________
+
+Title: Google’s Antitrust Defeat Opens the Door to Lawsuit From Yelp
+
+Publication date: 2024-08-28
+URL: https://www.nytimes.com/2024/08/28/technology/google-yelp-lawsuit.html
+
+Full text: When a federal judge declared Google an illegal monopoly in a landmark ruling this month, it was not immediately clear what consequences the world’s largest search engine provider would face.
+
+____________________________________________________________
+
+Title: Google’s Fate
+
+Publication date: 2024-08-29
+URL: https://www.nytimes.com/2024/08/29/briefing/googles-fate.html
+
+Full text: Google, a judge ruled earlier this month, is a monopolist. Now comes the hard part: How can its search be fixed to restore competition? Next week, the judge will hold his first hearing to consider the answer.
+
+____________________________________________________________
+

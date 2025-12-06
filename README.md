@@ -12,17 +12,12 @@
 
 [Sanity checks](panel_analysis_workflow_choices.md)
 
-[Korrelációs mátrix](panel_analysis_workflow_choices.md) 
+[Korrelációs mátrix](panel_analysis_workflow_choices.md)
 
 
 
 
 # Mi hiányzik
-
-Két scatterplot:
-- NYT_mention vs num_memes (vagy log1p_meme_volume) – hiányzik.
-- 
-Top100 aggregált idősor (meme_volume vs NYT_count)(jelenleg márkánkénti TS-ek vannak: figures/descriptive/timeseries/...).
 
 Granger-teszt
 

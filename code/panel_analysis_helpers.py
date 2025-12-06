@@ -128,6 +128,7 @@ def corrmx_cross(panel: pd.DataFrame, plot: bool = True, out_path: str = None) -
         "num_memes_z",
         "num_memes_rel",
         "log1p_meme_volume",
+        "log1p_meme_engagement",
         "mean_meme_sentiment",
     ]
     

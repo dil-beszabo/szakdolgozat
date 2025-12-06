@@ -1,0 +1,99 @@
+Title: Forced to Change: Tech Giants Bow to Global Onslaught of Rules
+
+Publication date: 2024-03-04
+URL: https://www.nytimes.com/2024/03/04/technology/europe-apple-meta-google-microsoft.html
+
+Full text: By Thursday, Google will have changed how it displays certain search results. Microsoft will no longer have Windows customers use its Bing internet search tool by default. And Apple will give iPhone and iPad users access to rival app stores and payment systems for the first time.
+
+____________________________________________________________
+
+Title: A.I. Start-Up Anthropic Challenges OpenAI and Google With New Chatbot
+
+Publication date: 2024-03-04
+URL: https://www.nytimes.com/2024/03/04/technology/anthropic-claude-openai-google.html
+
+Full text: The high-profile A.I. start-up Anthropic released a new version of its Claude chatbot on Monday, saying it outperforms other leading chatbots on a range of standard benchmark tests, including systems from Google and OpenAI.
+
+____________________________________________________________
+
+Title: Google Settles Smaller Lawsuits as It Prepares for More Antitrust Fights
+
+Publication date: 2024-03-04
+URL: https://www.nytimes.com/2024/03/04/technology/google-settlements-antitrust-fight.html
+
+Full text: In December, Google spent $700 million to resolve states’ claims that its Play Store had strong-armed app makers into high fees and tough terms. About six weeks after that, Google paid $350 million to end a lawsuit accusing it of improperly sharing users’ private information.
+
+____________________________________________________________
+
+Title: Ex-Google Engineer Charged With Stealing A.I. Secrets for Chinese Firm
+
+Publication date: 2024-03-07
+URL: https://www.nytimes.com/2024/03/06/us/politics/google-engineer-china-ai-theft.html
+
+Full text: A Chinese citizen who recently quit his job as a software engineer for Google in California has been charged with trying to transfer artificial intelligence technology to a Beijing-based company that paid him secretly, according to a federal indictment unsealed on Wednesday.
+
+____________________________________________________________
+
+Title: The Miseducation of Google’s A.I.
+
+Publication date: 2024-03-07
+URL: https://www.nytimes.com/2024/03/07/podcasts/the-daily/gemini-google-ai.html
+
+Full text: When Google released Gemini, a new chatbot powered by artificial intelligence, it quickly faced a backlash — and unleashed a fierce debate about whether A.I. should be guided by social values, and if so, whose values they should be.
+
+____________________________________________________________
+
+Title: Nicole Shanahan Emerges as a Top Candidate to Be R.F.K. Jr.’s Running Mate
+
+Publication date: 2024-03-17
+URL: https://www.nytimes.com/2024/03/17/us/politics/nicole-shanahan-rfk-jr-running-mate.html
+
+Full text: The campaign of Robert F. Kennedy Jr. indicated over the weekend that Nicole Shanahan — a Bay Area lawyer and investor who was once married to the Google co-founder Sergey Brin — was among the top picks to be Mr. Kennedy’s running mate on his independent presidential ticket.
+
+____________________________________________________________
+
+Title: Apple and Google Are Discussing a Deal to Bring Generative A.I. to iPhones
+
+Publication date: 2024-03-19
+URL: https://www.nytimes.com/2024/03/19/technology/apple-google-ai-iphone.html
+
+Full text: Apple is in discussions with Google about using the search giant’s generative artificial intelligence model called Gemini for its next iPhone, as the company races to embrace a technology that has upended the tech industry.
+
+____________________________________________________________
+
+Title: France Fines Google Amid A.I. Dispute With News Media
+
+Publication date: 2024-03-20
+URL: https://www.nytimes.com/2024/03/20/business/france-google-fine.html
+
+Full text: French regulators on Wednesday said Google failed to notify news publishers that it was using their articles to train its artificial intelligence algorithms, part of a wider ruling against the company for its negotiating practices with media outlets.
+
+____________________________________________________________
+
+Title: Judge Won’t Punish Michael Cohen for Relying on Artificial Intelligence
+
+Publication date: 2024-03-20
+URL: https://www.nytimes.com/2024/03/20/nyregion/michael-cohen-artificial-intelligence.html
+
+Full text: A Manhattan judge on Wednesday declined to impose sanctions on Michael D. Cohen, the onetime fixer for former President Donald J. Trump, after he mistakenly gave his lawyer fake legal citations concocted by Google Bard, an artificial intelligence program, for a motion the lawyer was preparing on Mr. Cohen’s behalf.
+
+____________________________________________________________
+
+Title: The Trustbuster Who Has Apple and Google in His Sights
+
+Publication date: 2024-03-22
+URL: https://www.nytimes.com/2024/03/22/technology/jonathan-kanter-apple-antitrust.html
+
+Full text: Shortly after Jonathan Kanter took over the Justice Department’s antitrust division in November 2021, the agency secured an additional $50 million to investigate monopolies, bust criminal cartels and block mergers.
+
+____________________________________________________________
+
+Title: Five U.S. Cases Targeting Big Tech 
+
+Publication date: 2024-03-22
+URL: https://www.nytimes.com/interactive/2024/03/22/business/5-us-cases-big-tech.html
+
+Full text: For years, Apple, Google, Meta and other tech giants operated unfettered. Now, regulators are taking steps to compel them to make major shifts to their products and businesses.
+
+____________________________________________________________
+
