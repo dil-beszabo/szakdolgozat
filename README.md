@@ -14,12 +14,7 @@
 
 [Korrelációs mátrix](panel_analysis_workflow_choices.md)
 
-
-
-
-# Mi hiányzik
-
-Granger-teszt
+[Granger tesztek](granger_causality.)
 
 ---
 # <mark style="background: #FF5582A6;">Topic relevancy</mark>
