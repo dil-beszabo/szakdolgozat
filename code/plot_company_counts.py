@@ -3,11 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 REPO_ROOT = "/Users/beszabo/bene/szakdolgozat"
-DERIVED_DIR = os.path.join(REPO_ROOT, "data", "derived")
+DATA_DIR = os.path.join(REPO_ROOT, "data")
 FIG_DIR = os.path.join(REPO_ROOT, "figures")
+PANEL_DIR = os.path.join(DATA_DIR, "panels")
 
-MEMES_CSV = os.path.join(DERIVED_DIR, "memes_weekly_activity.csv")
-NYT_CSV = os.path.join(DERIVED_DIR, "nyt_weekly_sentiment.csv")
+MEMES_CSV = os.path.join(PANEL_DIR, "memes_weekly_activity.csv")
+NYT_CSV = os.path.join(PANEL_DIR, "nyt_weekly_sentiment.csv")
 
 os.makedirs(FIG_DIR, exist_ok=True)
 
@@ -29,14 +30,14 @@ def main():
     # Load and aggregate memes counts
     memes = pd.read_csv(MEMES_CSV)
     memes_counts = memes.groupby("company", as_index=False)["num_memes"].sum()
-    memes_out = os.path.join(FIG_DIR, "company_num_memes.png")
+    memes_out = os.path.join(FIG_DIR, "descriptive", "company_num_memes.png")
     _plot_bar(memes_counts, "num_memes", "Total memes per company", memes_out)
     print(f"Saved {memes_out}")
 
     # Load and aggregate NYT article counts
     nyt = pd.read_csv(NYT_CSV)
     articles_counts = nyt.groupby("company", as_index=False)["NYT_mention"].sum()
-    articles_out = os.path.join(FIG_DIR, "company_nyt_mentions.png")
+    articles_out = os.path.join(FIG_DIR, "descriptive", "company_nyt_mentions.png")
     _plot_bar(articles_counts, "NYT_mention", "Total NYT mentions per company", articles_out)
     print(f"Saved {articles_out}")
 
