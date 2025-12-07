@@ -6,12 +6,12 @@
 (Audi OR q7 OR a8 OR q5)
 (BMW OR "Rolls Royce" OR R011s-R0yce OR Rolls-Royce OR x5 OR RollsRoyce OR m3)
 (Budweiser OR budlight OR "bud light")
-(Burberry OR "goddess perfume" OR herlondondream OR goddessperfume OR "her elixir" OR herelixir OR "her london dream" OR "london dream fragrance")
+(Burberry OR herlondondream OR goddessperfume OR "her elixir" OR herelixir OR "her london dream" OR "london dream fragrance")
 (Canon OR ts3322 OR ts3522 OR pixma OR "ts3322 printer" OR "pixma series" OR "ts3522 printer")
 (Cartier OR "tank watch" OR justeunclou OR "juste un clou" OR "tank must" OR tankmust OR tankwatch OR "must de cartier")
 (Chanel OR "no. 5" OR boybag OR no.5 OR classicflap OR "classic flap" OR "boy bag" OR "no. 5 perfume" OR "classic flap bag")
 (Cisco OR "catalyst switches" OR webex OR catalystswitches OR meraki OR "meraki routers")
-(CocaCola OR c0cac01a OR coke OR belesswhite OR cocacola OR c0ke OR "be less white" OR "coca cola" OR "be less white campaign" OR "coke soda")
+(CocaCola OR c0cac01a OR coke OR belesswhite OR cocacola OR c0ke OR "coca cola" OR "be less white campaign" OR "coke soda")
 Colgate OR "overnight pen" OR "optic white" OR overnightpen OR opticwhite OR humtoothbrush OR "hum toothbrush" OR "optic white toothpaste" OR "overnight whitening pen"
 Corona
 Danone OR dan0n OR oikos OR danon OR evian OR activia OR 0ik0s OR "activia yogurt" OR "evian water" OR "oikos yogurt"
@@ -19,15 +19,15 @@ DHL
 Dior OR d0ssier OR dossier OR sauvage OR "sauvage fragrance" OR "dossier perfume"
 Disney OR d00rab1es OR encant0 OR mickeymouse OR encanto OR "mickey mouse" OR doorables OR "encanto movie" OR "doorables toys"
 eBay
-Facebook OR messenger OR "messenger app"
+Facebook
 FedEx OR "fed ex" OR fedex OR "Fed Ex"
 Ferrari OR pur0sangue OR daytonasp3 OR purosangue OR "488 gtb" OR 488gtb OR sf90 OR "daytona sp3" OR "purosangue suv"
 Ford OR mach-e OR f150 OR mache OR br0nc0 OR bronco OR "mach e" OR "bronco suv" OR "f150 truck"
 Gillette OR "king c" OR kingc OR exfoliatingrazor OR "exfoliating razor" OR "king c razor"
-Google OR gmail OR chr0me OR gmai1 OR chrome OR "gmail service" OR "chrome browser"
+Google OR gmail OR chr0me OR gmai1 OR "gmail service" OR "chrome browser"
 Gucci OR "dionysus bag" OR "gg marmont" OR "princetown loafers" OR princetownloafers OR dionysusbag OR ggmarmont OR "marmont bag"
 Heineken
-Hennessy OR pinkwhitney OR "pink whitney" OR casamigos OR casamig0s
+Hennessy OR casamigos OR casamig0s
 Honda OR cr-v OR crv OR "cr v" OR civic OR "civic sedan" OR "cr-v suv"
 HP OR "reverb g2" OR victus OR reverbg2 OR envy6055 OR "envy 6055" OR "reverb g2 headset" OR "envy 6055 printer" OR "victus laptop"
 Huawei OR mate60 OR "mate 60" OR mateb00k OR p30 OR matebook OR "mate 60 phone" OR "p30 phone" OR "matebook laptop"
@@ -46,18 +46,18 @@ LOrealParis OR dreamlengths OR "wonder water" OR wonderwater OR loreal OR "dream
 LouisVuitton OR neverfulltote OR "neverfull tote" OR speedybag OR keepallbag OR "keepall bag" OR "speedy bag" OR "keepall duffle"
 Mastercard
 McDonalds OR mcnuggets OR bigmac OR "big mac" OR happymeal OR mcflurries OR mcdonalds OR mcd0na1ds OR mcf1urries OR "happy meal" OR "big mac burger" OR "mcflurries dessert" OR "i'm lovin' it"
-MercedesBenz OR "glc class" OR glcclass OR mercedes OR glc-class OR amg OR g1c-c1ass OR "glc-class suv" OR "amg package"
+MercedesBenz OR "glc class" OR glcclass OR mercedes OR glc-class OR g1c-c1ass OR "glc-class suv" OR "amg package"
 Microsoft OR teams OR wind0ws OR xbox OR windows OR xb0x OR "windows os" OR "teams app" OR "xbox console"
 Nescafe OR dolcegusto OR "dolce gusto" OR "dolce gusto machine"
 Nespresso OR vertuo OR originalline OR vertu0 OR vertuoline OR vertu01ine OR 0rigina11ine OR "vertuoline machine" OR "originalline capsules"
 Nestle OR maggi OR "toll house" OR tollhouse OR kitkat OR "kitkat chocolate" OR "maggi noodles" OR "toll house cookies"
 Netflix
 Nike OR "dri fit" OR dri-fit OR "air jordan" OR "just do it" OR airmax OR airjordan OR justdoit OR drifit OR "air max" OR "air max sneakers" OR "air jordan shoes" OR "dri-fit clothing"
-Nintendo OR "switch lite" OR switchlite OR ze1da OR mario OR switchgames OR "switch oled" OR zelda OR "switch games" OR switcholed OR mari0 OR "switch lite console" OR "switch oled console" OR "zelda game" OR "mario game"
+Nintendo OR "switch lite" OR switchlite OR ze1da OR mario OR switchgames OR "switch oled" OR zelda OR switcholed OR mari0 OR "switch lite console" OR "switch oled console" OR "zelda game" OR "mario game"
 Nissan OR pathfinder OR altima OR a1tima OR sentra OR "altima sedan" OR "sentra sedan" OR "pathfinder suv"
 Oracle OR java OR "java software"
 Pampers OR swadd1ers OR swaddlers OR "swaddlers diapers"
-Panasonic OR s5ii OR 1umix OR t0ughb00k OR "s5 ii" OR toughbook OR lumix OR "lumix camera" OR "toughbook laptop" OR "s5 ii camera"
+Panasonic OR s5ii OR 1umix OR t0ughb00k OR "s5 ii"  OR lumix OR "lumix camera" OR "toughbook laptop" OR "s5 ii camera"
 PayPal OR venm0 OR zett1e OR zettle OR braintree OR venmo OR "zettle reader" OR "venmo app" OR "braintree payments"
 Pepsi
 Porsche OR panamera OR cayenne OR taycan OR "taycan electric" OR "cayenne suv" OR "panamera sedan"
