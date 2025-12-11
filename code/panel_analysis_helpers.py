@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import pearsonr, spearmanr
 
 # ---- Column naming convention (single source of truth) ---- #
 NYT_POS = "mean_pos"
@@ -149,6 +150,53 @@ def corrmx_cross(panel: pd.DataFrame, plot: bool = True, out_path: str = None) -
 
     return corr
 
+
+# --- Correlation matrices with p-values (Pearson & Spearman) --- #
+
+def _corr_with_p_generic(df: pd.DataFrame, cols, method: str = "pearson"):
+    """Return correlation and p-value matrices using the chosen method."""
+
+    r_mat = pd.DataFrame(index=cols, columns=cols, dtype=float)
+    p_mat = pd.DataFrame(index=cols, columns=cols, dtype=float)
+
+    corr_func = pearsonr if method == "pearson" else spearmanr
+
+    for i, c1 in enumerate(cols):
+        for j, c2 in enumerate(cols):
+            if j < i:
+                r_mat.loc[c1, c2] = r_mat.loc[c2, c1]
+                p_mat.loc[c1, c2] = p_mat.loc[c2, c1]
+            else:
+                pair = df[[c1, c2]].dropna()
+                if len(pair) < 2:
+                    r, p = np.nan, np.nan
+                elif c1 == c2:
+                    r, p = 1.0, 0.0
+                else:
+                    r, p = corr_func(pair[c1].values, pair[c2].values)
+                # coerce to scalar (spearmanr can return 2x2 when inputs identical)
+                try:
+                    r = float(np.asarray(r).item())
+                except Exception:
+                    r = np.nan
+                try:
+                    p = float(np.asarray(p).item())
+                except Exception:
+                    p = np.nan
+                r_mat.loc[c1, c2] = r
+                p_mat.loc[c1, c2] = p
+
+    return r_mat.astype(float), p_mat.astype(float)
+
+
+def corr_with_p_pearson(df: pd.DataFrame, cols):
+    """Pearson correlation (& p) matrix for selected columns."""
+    return _corr_with_p_generic(df, cols, method="pearson")
+
+
+def corr_with_p_spearman(df: pd.DataFrame, cols):
+    """Spearman rank-correlation (& p) matrix for selected columns."""
+    return _corr_with_p_generic(df, cols, method="spearman")
 # ---------------- Event study ---------------- #
 
 def event_study(panel: pd.DataFrame, pos_feature: str, neg_feature: str, window: int = 3):
@@ -270,6 +318,7 @@ def plot_event_ci(df: pd.DataFrame, value_col: str, title: str, out_path: str):
     plt.figure(figsize=(6, 4))
     plt.plot(agg["tau"], agg["mean"], marker="o", label="Mean")
     plt.fill_between(agg["tau"], agg["lo"], agg["hi"], alpha=0.2, label="95% CI")
+    plt.axhline(0, color="gray", linewidth=1)
     plt.axvline(0, color="gray", linestyle="--", linewidth=1)
     plt.xlabel("Weeks around event")
     plt.ylabel(f"Mean {value_col}")
@@ -528,7 +577,7 @@ def run_nyt_spike_event_study(panel: pd.DataFrame, fig_dir: str) -> None:
     
     m_pos = event_study_from_indices(panel, pos_split, MEME_Z, window=win)
     m_neg = event_study_from_indices(panel, neg_split, MEME_Z, window=win)
-    
+   
     plot_event_ci(m_pos, MEME_Z,
                   'Event (mentions spikes, pos tone): num_memes_z',
                   os.path.join(fig_dir, 'appendix/mentions-as-events/event_mentions_pos_num_memes_z_ci.png'))
