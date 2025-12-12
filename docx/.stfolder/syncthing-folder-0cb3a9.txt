@@ -1,5 +1,0 @@
-# This directory is a Syncthing folder marker.
-# Do not delete.
-
-folderID: gjyzz-un2fz
-created: 2025-12-08T09:30:41+01:00
